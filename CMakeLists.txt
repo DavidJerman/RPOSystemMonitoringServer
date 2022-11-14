@@ -16,6 +16,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
 add_executable(SystemMonitoringServer
   main.cpp
+  protocol.h
+  protocol.cpp
+  auth.h
+  auth.cpp
 )
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core)
 
