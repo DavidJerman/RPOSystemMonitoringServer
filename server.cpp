@@ -1,9 +1,22 @@
 #include "server.h"
+#include "config.h"
+
 
 Server::Server()
 {
     // TODO: Create QTcpServer
     server = new QTcpServer();
+
+    // Temp
+    Config config;
+
+    try {
+        config.getValue("Test");
+    }
+    catch (const PropertyNotFoundException& e)
+    {
+        qDebug() << e.message();
+    }
 }
 
 
