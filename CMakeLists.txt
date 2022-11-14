@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 add_executable(SystemMonitoringServer
   main.cpp
@@ -20,8 +20,14 @@ add_executable(SystemMonitoringServer
   protocol.cpp
   auth.h
   auth.cpp
+  server.h
+  server.cpp
+  config.h
+  config.cpp
 )
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Network)
+
 
 install(TARGETS SystemMonitoringServer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
