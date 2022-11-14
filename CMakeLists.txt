@@ -20,10 +20,10 @@ add_executable(SystemMonitoringServer
   protocol.cpp
   auth.h
   auth.cpp
-  server.h
-  server.cpp
   config.h
   config.cpp
+  server.h
+  server.cpp
 )
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Network)
