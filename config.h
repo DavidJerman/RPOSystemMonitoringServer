@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QString>
 #include <QFile>
+#include <QVector>
 
 #include <QException>
 
@@ -20,20 +21,31 @@ public:
 
     static QString getValue(QString property);
 
-    static bool isEmpty();
+    static const QList<QString> getProperties();
+
+    static bool isEmpty() noexcept;
 
     static bool hasProperty(QString property);
 
     static bool hasValue(QString value);
 
-    static qsizetype size();
+    static qsizetype size() noexcept;
 
-    static void clear();
+    static void clear() noexcept;
 
 private:
     static bool isDataLoaded;
 
     static QMap<QString, QString> config;
+
+
+private:
+    // Private functions for string data manipulation
+    static QVector<QByteArray> split(QByteArray &data, char delimiter);
+
+    static QByteArray join(QVector<QByteArray> &vector);
+
+    static QByteArray &remove(QByteArray &data, char ch);
 };
 
 
@@ -65,6 +77,36 @@ public:
 private:
     QString _message;
 };
+
+
+class FileException : public QException
+{
+public:
+    FileException(const QString &_message = "") noexcept
+        : _message(_message) {}
+
+
+    void raise() const override
+    {
+        throw *this;
+    }
+
+
+    FileException *clone() const override
+    {
+        return new FileException(*this);
+    }
+
+
+    QString message() const noexcept
+    {
+        return _message;
+    }
+
+private:
+    QString _message;
+};
+
 
 
 #endif // CONFIG_H

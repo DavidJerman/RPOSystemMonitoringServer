@@ -7,9 +7,44 @@ bool Config::isDataLoaded;
 QMap<QString, QString> Config::config;
 
 
+// Upon exception, no data is loaded
 void Config::loadDataFromFile(QString fileName)
 {
+    QFile file (fileName);
 
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        auto message = QString("Error openning file " + fileName + ": " + file.errorString());
+        throw FileException(message);
+    }
+
+    while (!file.atEnd()) {
+        // Config file style
+        QByteArray line = file.readLine();
+        // These symbols will be ignored in the config file
+        remove(line, '\n');
+        remove(line, '\r');
+        remove(line, ' ');
+
+        auto data = split(line, ':');
+
+        auto &property = data[0];
+        auto &value = data[1];
+
+        // Invalid file format exception
+        if (data.size() != 2)
+        {
+            clear();
+            throw FileException("Invalid file format!");
+        }
+        // Duplicate config entries warning
+        if (hasProperty(property))
+        {
+            clear();
+            throw FileException("Duplicate entry found in config file: " + property);
+        }
+
+        addProperty(property, value);
+    }
 }
 
 
@@ -31,7 +66,13 @@ QString Config::getValue(QString property)
 }
 
 
-bool Config::isEmpty()
+const QList<QString> Config::getProperties()
+{
+    return config.keys();
+}
+
+
+bool Config::isEmpty() noexcept
 {
     return config.isEmpty();
 }
@@ -56,13 +97,56 @@ bool Config::hasValue(QString value)
 }
 
 
-qsizetype Config::size()
+qsizetype Config::size() noexcept
 {
     return config.size();
 }
 
 
-void Config::clear()
+void Config::clear() noexcept
 {
     config.clear();
+}
+
+
+// This function should work without exceptions
+QVector<QByteArray> Config::split(QByteArray &data, char delimiter)
+{
+    QVector<QByteArray> array;
+    for (int start = 0, end = 0; end <= data.size(); end++)
+    {
+        if (end == data.size()) {
+            if (start < end && start < data.size())
+            {
+                array.append(data.mid(start, data.size() - start));
+            }
+            break;
+        }
+        if (data[end] == delimiter)
+        {
+            if (start - end != 0)
+                array.append(data.mid(start, end - start));
+            start = end + 1;
+        }
+    }
+    return std::move(array);
+}
+
+
+QByteArray Config::join(QVector<QByteArray> &vector)
+{
+    QByteArray data;
+    for (auto date : vector)
+    {
+        data.append(date);
+    }
+    return data;
+}
+
+
+QByteArray &Config::remove(QByteArray &data, char ch)
+{
+    auto splitData = split(data, ch);
+    data = join(splitData);
+    return data;
 }
