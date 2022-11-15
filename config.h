@@ -13,30 +13,30 @@
 class Config
 {
 public:
-    Config() = default;
+    Config();
 
-    static void loadDataFromFile(QString fileName);
+    void loadFromFile(QString fileName);
 
-    static void addProperty(QString property, QString value);
+    void addProperty(QString property, QString value);
 
-    static QString getValue(QString property);
+    QString getValue(QString property);
 
-    static const QList<QString> getProperties();
+    const QList<QString> getProperties();
 
-    static bool isEmpty() noexcept;
+    bool isEmpty() noexcept;
 
-    static bool hasProperty(QString property);
+    bool hasProperty(QString property);
 
-    static bool hasValue(QString value);
+    bool hasValue(QString value);
 
-    static qsizetype size() noexcept;
+    bool isLoaded();
 
-    static void clear() noexcept;
+    qsizetype size() noexcept;
+
+    void clear() noexcept;
 
 private:
-    static bool isDataLoaded;
-
-    static QMap<QString, QString> config;
+    QMap<QString, QString> config;
 
 
 private:
@@ -45,7 +45,7 @@ private:
 
     static QByteArray join(QVector<QByteArray> &vector);
 
-    static QByteArray &remove(QByteArray &data, char ch);
+    static QByteArray &remove(QByteArray &data, char value);
 };
 
 

@@ -2,24 +2,48 @@
 #include "config.h"
 
 
+/**
+ * @brief Constructs the server and loads the config
+ */
 Server::Server()
 {
-    // TODO: Create QTcpServer
+    // Load config here
+
+    // TODO: Create QTcpServer properly
     server = new QTcpServer();
 
     // Temp
+    // Just for testing
     Config config;
 
     try {
         config.getValue("Test");
+
     }
     catch (const PropertyNotFoundException& e)
     {
         qDebug() << e.message();
     }
+
+    try {
+        config.loadFromFile("test.txt");
+    }
+    catch (const FileException& e)
+    {
+        qDebug() << e.message();
+    }
+
+    auto properties = config.getProperties();
+    for (auto &property : properties)
+    {
+        qDebug() << property << config.getValue(property);
+    }
 }
 
 
+/**
+ * @brief Deletes the server and disconnectes all clients
+ */
 Server::~Server()
 {
     server->close();
@@ -32,7 +56,9 @@ Server::~Server()
 }
 
 
-// New connection slot
+/**
+ * @brief Accepts the new connection and saves it to a list
+ */
 void Server::onNewConnection()
 {
     // Add new client to the list
@@ -41,7 +67,9 @@ void Server::onNewConnection()
 }
 
 
-// Ready read slot
+/**
+ * @brief Reads the client message and processes it
+ */
 void Server::onReadReady()
 {
     // Accept
