@@ -23,6 +23,8 @@ void Config::loadDataFromFile(QString fileName)
         // These symbols will be ignored in the config file
         remove(line, '\n');
         remove(line, '\r');
+        // For now spaces are not supported in the config file
+        // TODO: Add support for this
         remove(line, ' ');
 
         auto data = split(line, ':');
