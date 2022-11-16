@@ -160,7 +160,7 @@ qsizetype Config::size() noexcept
 
 
 /**
- * @brief Removes all properties from the configuration
+ * @brief Removes all properties from the documentation
  */
 void Config::clear() noexcept
 {
