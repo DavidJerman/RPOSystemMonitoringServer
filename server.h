@@ -6,7 +6,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-#include <memory>
+#include "config.h"
 
 class Server
 {
@@ -25,6 +25,8 @@ private:
     QTcpServer* server;
 
     QList<QTcpSocket*> clients;
+
+    Config config;
 };
 
 #endif // SERVER_H

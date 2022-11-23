@@ -1,43 +1,16 @@
 #include "server.h"
-#include "config.h"
-
 
 /**
  * @brief Constructs the server and loads the config
  */
 Server::Server()
+    : server(new QTcpServer()),
+      config(Config())
 {
-    // Load config here
+    // Load config
+    config.loadFromFile("./config.cfg");
 
-    // TODO: Create QTcpServer properly
-    server = new QTcpServer();
-
-    // Temp
-    // Just for testing
-    Config config;
-
-    try {
-        config.getValue("Test");
-
-    }
-    catch (const PropertyNotFoundException& e)
-    {
-        qDebug() << e.message();
-    }
-
-    try {
-        config.loadFromFile("test.txt");
-    }
-    catch (const FileException& e)
-    {
-        qDebug() << e.message();
-    }
-
-    auto properties = config.getProperties();
-    for (auto &property : properties)
-    {
-        qDebug() << property << config.getValue(property);
-    }
+    // TODO: Check for needed config values
 }
 
 
