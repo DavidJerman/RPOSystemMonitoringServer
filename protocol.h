@@ -26,4 +26,9 @@ public:
 
 };
 
+
+// Data containing classes
+
+
+
 #endif // PROTOCOL_H
