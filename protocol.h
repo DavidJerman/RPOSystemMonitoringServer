@@ -2,8 +2,12 @@
 #define PROTOCOL_H
 
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include <QException>
+
+#include <QFile>
 
 #include "components/system.h"
 
@@ -21,16 +25,16 @@ class Protocol
 public:
     Protocol();
 
-    static QJsonDocument jsobDocumentFromFile(QString file);
+    static QByteArray UTF8JsonFromFile(QString fileName);
 
-    static QString jsonStringFromFile(QString file);
+    static QJsonDocument UTF8ToJsonDocument(const QByteArray& data);
+
+    static QByteArray jsonDocumentToUTF8(const QJsonDocument& data);
 
     static System* jsonDocumentToSystem(const QJsonDocument& doc);
+
+    static QJsonDocument systemToJsonDocument(const System* system);
 };
-
-
-// Data containing classes
-
 
 
 #endif // PROTOCOL_H

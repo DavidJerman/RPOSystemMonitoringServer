@@ -15,6 +15,8 @@ public:
     System();
     System(const QList<Component *> &components);
 
+    ~System();
+
     void addComponent(Component* component);
 
     QList<Component*>::const_iterator begin() const;

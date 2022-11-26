@@ -7,6 +7,14 @@ System::System(const QList<Component *> &components) :
     components(components)
 {}
 
+System::~System()
+{
+    for (auto component : components)
+    {
+        delete component;
+    }
+}
+
 void System::addComponent(Component *component)
 {
     if (component != nullptr)
