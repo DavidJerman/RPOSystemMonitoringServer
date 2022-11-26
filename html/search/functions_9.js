@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['onnewconnection_0',['onNewConnection',['../class_server.html#ab7d5dd116a6799baf51f3cb7396748b6',1,'Server']]],
-  ['onreadready_1',['onReadReady',['../class_server.html#a6f46657db308b39e5296450243f929ca',1,'Server']]]
+  ['jsondocumenttosystem_0',['jsonDocumentToSystem',['../class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1',1,'Protocol']]],
+  ['jsondocumenttoutf8_1',['jsonDocumentToUTF8',['../class_protocol.html#a0e092969e30389b6f1672006a6569778',1,'Protocol']]]
 ];

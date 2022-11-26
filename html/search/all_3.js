@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['getproperties_0',['getProperties',['../class_config.html#ad268e214e24d190fddef037e228c6d57',1,'Config']]],
-  ['getvalue_1',['getValue',['../class_config.html#a40729b8639e80bd45c333f66e54fa5cf',1,'Config']]]
+  ['disk_0',['Disk',['../class_disk.html',1,'Disk'],['../class_disk.html#a960f72432b8bcbc359f495f99df0860d',1,'Disk::Disk()']]],
+  ['disk_2ecpp_1',['disk.cpp',['../disk_8cpp.html',1,'']]],
+  ['disk_2eh_2',['disk.h',['../disk_8h.html',1,'']]]
 ];

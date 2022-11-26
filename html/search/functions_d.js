@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['utf8jsonfromfile_0',['UTF8JsonFromFile',['../class_protocol.html#a5b9794e0be57d9d41b4a82acee000e78',1,'Protocol']]],
-  ['utf8tojsondocument_1',['UTF8ToJsonDocument',['../class_protocol.html#a6fc396df4193af401d4ca3708d4c24fc',1,'Protocol']]]
+  ['onnewconnection_0',['onNewConnection',['../class_server.html#ab7d5dd116a6799baf51f3cb7396748b6',1,'Server']]],
+  ['onreadready_1',['onReadReady',['../class_server.html#a6f46657db308b39e5296450243f929ca',1,'Server']]]
 ];
