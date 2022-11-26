@@ -1,11 +1,16 @@
 #include <QCoreApplication>
 
+#include "server.h"
+
+// Temp
+//#include "config.h"
+#include <iostream>
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    //MainWindow w;
-      // w.show();
+     QCoreApplication a(argc, argv);
 
-       return a.exec();
-    return a.exec();
+     Server server;
+
+     return a.exec();
 }
