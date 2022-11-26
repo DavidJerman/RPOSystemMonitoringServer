@@ -3,12 +3,11 @@
 #include "server.h"
 
 // Temp
-#include "config.h"
+//#include "config.h"
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
-
      QCoreApplication a(argc, argv);
 
      Server server;
