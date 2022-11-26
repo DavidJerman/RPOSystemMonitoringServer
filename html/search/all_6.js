@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['loadfromfile_0',['loadFromFile',['../class_config.html#a16c8faad22596d60b7319a0d771641fc',1,'Config']]]
+  ['jsondocumenttosystem_0',['jsonDocumentToSystem',['../class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1',1,'Protocol']]],
+  ['jsondocumenttoutf8_1',['jsonDocumentToUTF8',['../class_protocol.html#a0e092969e30389b6f1672006a6569778',1,'Protocol']]]
 ];
