@@ -7,6 +7,7 @@ class Component
 {
 public:
     Component(int ID, const QString &name);
+    virtual ~Component();
 
     int getID() const;
     void setID(int newID);

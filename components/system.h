@@ -29,6 +29,16 @@ public:
 
     QList<Component*> getComponents() const;
 
+    bool isCpu(Component* component);
+
+    bool isGpu(Component* component);
+
+    bool isDisk(Component* component);
+
+    bool isNetwork(Component* component);
+
+    bool isRam(Component* component);
+
 private:
     QList<Component*> components;
 };

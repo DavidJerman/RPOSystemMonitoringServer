@@ -45,3 +45,28 @@ QList<Component*> System::getComponents() const
 {
     return components;
 }
+
+bool System::isCpu(Component *component)
+{
+    return dynamic_cast<Cpu*> (component);
+}
+
+bool System::isGpu(Component *component)
+{
+    return dynamic_cast<Gpu*> (component);
+}
+
+bool System::isDisk(Component *component)
+{
+    return dynamic_cast<Disk*> (component);
+}
+
+bool System::isNetwork(Component *component)
+{
+    return dynamic_cast<Network*> (component);
+}
+
+bool System::isRam(Component *component)
+{
+    return dynamic_cast<Ram*> (component);
+}
