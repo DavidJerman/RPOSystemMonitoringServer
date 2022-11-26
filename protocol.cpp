@@ -3,6 +3,11 @@
 Protocol::Protocol()
 {}
 
+/**
+ * @brief Loads a byte array from a file.
+ * @param fileName File to load from
+ * @return Data
+ */
 QByteArray Protocol::UTF8JsonFromFile(QString fileName)
 {
     // Temp
@@ -15,18 +20,41 @@ QByteArray Protocol::UTF8JsonFromFile(QString fileName)
     return {};
 }
 
+/**
+ * Converts a byte array to a JSON document.
+ * If invalid empty/invalid data is received, an empty JSON document is returned.
+ * @brief Converts a byte array to a JSON document.
+ * @param data Byte array
+ * @return JSON document
+ */
 QJsonDocument Protocol::UTF8ToJsonDocument(const QByteArray &data)
 {
+    if (data.size() == 0)
+        return {};
     return QJsonDocument::fromJson(data);
 }
 
+/**
+ * Converts a JSON document to a byte array.
+ * If invalid/empty JSON document is received an empty array is returned.
+ * @brief Converts a JSON document to a byte array.
+ * @param doc JSON Document to convert
+ * @return Byte array
+ */
 QByteArray Protocol::jsonDocumentToUTF8(const QJsonDocument &doc)
 {
+    if (doc.isNull())
+        return {};
     return doc.toJson();
 }
 
-// Returns nullptr if the document is invalid
-// This function will only work with system, upon checking for errors, will return nullptr
+/**
+ * Converts a JSON document to a system class that contains components.
+ * If the JSON document is invalid or contains invalid data, a nullptr is returned!
+ * @brief Converts json document to system object.
+ * @param doc JSON Document to convert
+ * @return System class
+ */
 System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc)
 {
     // Parse
@@ -180,6 +208,13 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc)
     return system;
 }
 
+/**
+ * Converts a system object to a JSON document. The object should contain at least some components.
+ * If the system class is empty, returns an empty document.
+ * @brief Converts a system object to a JSON document.
+ * @param system System to convert
+ * @return JSON document
+ */
 QJsonDocument Protocol::systemToJsonDocument(const System *system)
 {
     // Parse
