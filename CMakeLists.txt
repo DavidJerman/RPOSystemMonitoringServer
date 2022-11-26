@@ -25,6 +25,8 @@ add_executable(SystemMonitoringServer
   components/gpu.h components/gpu.cpp
   components/network.h components/network.cpp
   components/ram.h components/ram.cpp
+  components/system.h components/system.cpp
+  components/component.h components/component.cpp
 )
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Network)

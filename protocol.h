@@ -5,6 +5,8 @@
 
 #include <QException>
 
+#include "components/system.h"
+
 /**
  * This class defines the protocol.
  * The structure used for sending data is json.
@@ -19,11 +21,11 @@ class Protocol
 public:
     Protocol();
 
-    static QJsonDocument jsobObjectFromFile(QString file);
+    static QJsonDocument jsobDocumentFromFile(QString file);
 
     static QString jsonStringFromFile(QString file);
 
-
+    static System* jsonDocumentToSystem(const QJsonDocument& doc);
 };
 
 
