@@ -39,6 +39,8 @@ public:
 
     static bool isRam(Component *component);
 
+    void sort();
+
 private:
     QList<Component *> components;
 };

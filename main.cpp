@@ -8,8 +8,10 @@ int main(int argc, char *argv[]) {
 
     // Server server;
 
-    auto data = Protocol::UTF8JsonFromFile("jsonExamples/newUpdateSystem.json");
-    auto system = Protocol::jsonDocumentToSystem(Protocol::UTF8ToJsonDocument(data));
+    auto data = Protocol::UTF8JsonFromFile(R"(C:\QtBuilds\build-SystemMonitoringServer-Desktop_Qt_6_4_0_MinGW_64_bit-Debug\jsonExamples\newUpdateSystem.json)");
+
+    auto doc = Protocol::UTF8ToJsonDocument(data);
+    auto system = Protocol::jsonDocumentToSystem(doc);
 
     return QCoreApplication::exec();
 }

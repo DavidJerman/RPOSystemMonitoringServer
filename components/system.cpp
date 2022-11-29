@@ -55,3 +55,37 @@ bool System::isNetwork(Component *const component) {
 bool System::isRam(Component *const component) {
     return dynamic_cast<Ram *> (component);
 }
+
+void System::sort() {
+    // Add all the rams at the beginning of the list
+    for (int i = 0; i < components.size(); i++) {
+        if (isRam(components[i])) {
+            components.move(i, 0);
+        }
+    }
+    // Add all the networks at the beginning of the list
+    for (int i = 0; i < components.size(); i++) {
+        if (isNetwork(components[i])) {
+            components.move(i, 0);
+        }
+    }
+    // Add all the gpus at the beginning of the list
+    for (int i = 0; i < components.size(); i++) {
+        if (isGpu(components[i])) {
+            components.move(i, 0);
+        }
+    }
+    // Add all the disk at the beginning of the list
+    for (int i = 0; i < components.size(); i++) {
+        if (isDisk(components[i])) {
+            components.move(i, 0);
+        }
+    }
+    // Add all cpus at the beginning of the list
+    for (auto component: components) {
+        if (isCpu(component)) {
+            components.remove(components.indexOf(component));
+            components.prepend(component);
+        }
+    }
+}

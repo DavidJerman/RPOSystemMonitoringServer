@@ -1,13 +1,13 @@
 #include "protocol.h"
 
-Protocol::Protocol() {}
+Protocol::Protocol() = default;
 
 /**
  * @brief Loads a byte array from a file.
  * @param fileName File to load from
  * @return Data
  */
-QByteArray Protocol::UTF8JsonFromFile(QString fileName) {
+QByteArray Protocol::UTF8JsonFromFile(const QString& fileName) {
     // Temp
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -63,9 +63,9 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
                 auto componentValue = componentTypeValue.value(component).toObject();
                 auto id = componentValue.value("id");
                 auto name = componentValue.value("name");
-                auto maxFrequency = componentValue.value("maxFrequency");
+                auto maxFrequency = componentValue.value("max_frequency");
                 auto cores = componentValue.value("cores");
-                auto fk_client = componentValue.value("fkClient");
+                auto fk_client = componentValue.value("fk_client");
                 if (id.isUndefined() || name.isUndefined() || maxFrequency.isUndefined() || cores.isUndefined() ||
                     fk_client.isUndefined()) {
                     delete system;
@@ -89,7 +89,7 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
                 auto name = componentValue.value("name");
                 auto capacity = componentValue.value("capacity");
                 auto type = componentValue.value("type");
-                auto fk_client = componentValue.value("fkClient");
+                auto fk_client = componentValue.value("fk_client");
                 if (id.isUndefined() || name.isUndefined() || capacity.isUndefined() || type.isUndefined() ||
                     fk_client.isUndefined()) {
                     delete system;
@@ -111,9 +111,9 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
                 auto componentValue = componentTypeValue.value(component).toObject();
                 auto id = componentValue.value("id");
                 auto name = componentValue.value("name");
-                auto max_frequency = componentValue.value("maxFrequency");
-                auto vram = componentValue.value("vRam");
-                auto fk_client = componentValue.value("fkClient");
+                auto max_frequency = componentValue.value("max_frequency");
+                auto vram = componentValue.value("vram");
+                auto fk_client = componentValue.value("fk_client");
                 if (id.isUndefined() || name.isUndefined() || max_frequency.isUndefined() || vram.isUndefined() ||
                     fk_client.isUndefined()) {
                     delete system;
@@ -136,7 +136,7 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
                 auto id = componentValue.value("id");
                 auto name = componentValue.value("name");
                 auto type = componentValue.value("type");
-                auto fk_client = componentValue.value("fkClient");
+                auto fk_client = componentValue.value("fk_client");
                 if (id.isUndefined() || name.isUndefined() || type.isUndefined() || fk_client.isUndefined()) {
                     delete system;
                     return nullptr;
@@ -159,7 +159,7 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
                 auto capacity = componentValue.value("capacity");
                 auto type = componentValue.value("type");
                 auto frequency = componentValue.value("frequency");
-                auto fk_client = componentValue.value("fkClient");
+                auto fk_client = componentValue.value("fk_client");
                 if (id.isUndefined() || name.isUndefined() || capacity.isUndefined() || type.isUndefined() ||
                     frequency.isUndefined() || fk_client.isUndefined()) {
                     delete system;
@@ -188,7 +188,8 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
  * @param system System to convert
  * @return JSON document
  */
-QJsonDocument Protocol::systemToJsonDocument(const System *system) {
+QJsonDocument Protocol::systemToJsonDocument(System *system) {
+    system->sort();
     // Parse
     // For every component in the system, add it to the JSON object
     QJsonObject object;
