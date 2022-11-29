@@ -8,23 +8,23 @@
 
 #include "config.h"
 
-class Server
-{
+class Server {
 public:
     Server();
 
     ~Server();
 
 public slots:
+
     // Slots that we connect to signals
     void onNewConnection();
 
     void onReadReady();
 
 private:
-    QTcpServer* server;
+    QTcpServer *server;
 
-    QList<QTcpSocket*> clients;
+    QList<QTcpSocket *> clients;
 
     Config config;
 };

@@ -3,24 +3,26 @@
 
 #include "components/component.h"
 
-class Cpu : public Component
-{
+class Cpu : public Component {
 public:
-    Cpu(double max_frequency, int cores, int fk_client, int ID, const QString &name);
+    Cpu(double maxFrequency, int cores, int fkClient, int ID, const QString &name);
 
-    double getMax_frequency() const;
-    void setMax_frequency(double newMax_frequency);
+    [[nodiscard]] double getMaxFrequency() const;
 
-    int getCores() const;
+    void setMaxFrequency(double newMaxFrequency);
+
+    [[nodiscard]] int getCores() const;
+
     void setCores(int newCores);
 
-    int getFk_client() const;
-    void setFk_client(int newFk_client);
+    [[nodiscard]] int getFkClient() const;
+
+    void setFkClient(int newFkClient);
 
 private:
-    double max_frequency;
+    double maxFrequency;
     int cores;
-    int fk_client;
+    int fkClient;
 };
 
 #endif // CPU_H

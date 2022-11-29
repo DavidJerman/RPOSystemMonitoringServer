@@ -3,16 +3,18 @@
 
 #include <QString>
 
-class Component
-{
+class Component {
 public:
     Component(int ID, const QString &name);
+
     virtual ~Component();
 
-    int getID() const;
+    [[nodiscard]] int getID() const;
+
     void setID(int newID);
 
-    QString getName() const;
+    [[nodiscard]] QString getName() const;
+
     void setName(const QString &newName);
 
 private:

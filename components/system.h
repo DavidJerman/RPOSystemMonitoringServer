@@ -9,38 +9,38 @@
 
 #include <QList>
 
-class System
-{
+class System {
 public:
     System();
-    System(const QList<Component *> &components);
+
+    explicit System(const QList<Component *> &components);
 
     ~System();
 
-    void addComponent(Component* component);
+    void addComponent(Component *component);
 
-    QList<Component*>::const_iterator begin() const;
+    [[nodiscard]] QList<Component *>::const_iterator begin() const;
 
-    QList<Component*>::const_iterator end() const;
+    [[nodiscard]] QList<Component *>::const_iterator end() const;
 
     bool hasComponent(Component *component) const;
 
-    void removeComponent(Component* component);
+    void removeComponent(Component *component);
 
-    QList<Component*> getComponents() const;
+    [[nodiscard]] QList<Component *> getComponents() const;
 
-    bool isCpu(Component* component);
+    static bool isCpu(Component *component);
 
-    bool isGpu(Component* component);
+    static bool isGpu(Component *component);
 
-    bool isDisk(Component* component);
+    static bool isDisk(Component *component);
 
-    bool isNetwork(Component* component);
+    static bool isNetwork(Component *component);
 
-    bool isRam(Component* component);
+    static bool isRam(Component *component);
 
 private:
-    QList<Component*> components;
+    QList<Component *> components;
 };
 
 #endif // SYSTEM_H

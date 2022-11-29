@@ -1,38 +1,33 @@
 #include "disk.h"
 
-double Disk::getCapacity() const
-{
+#include <utility>
+
+double Disk::getCapacity() const {
     return capacity;
 }
 
-void Disk::setCapacity(double newCapacity)
-{
+void Disk::setCapacity(double newCapacity) {
     capacity = newCapacity;
 }
 
-QString Disk::getType() const
-{
+QString Disk::getType() const {
     return type;
 }
 
-void Disk::setType(const QString &newType)
-{
+void Disk::setType(const QString &newType) {
     type = newType;
 }
 
-int Disk::getFk_client() const
-{
-    return fk_client;
+int Disk::getFkClient() const {
+    return fkClient;
 }
 
-void Disk::setFk_client(int newFk_client)
-{
-    fk_client = newFk_client;
+void Disk::setFkClient(int newFkClient) {
+    fkClient = newFkClient;
 }
 
-Disk::Disk(double capacity, const QString &type, int fk_client, int ID, const QString &name) :
-    Component(ID, name),
-    capacity(capacity),
-    type(type),
-    fk_client(fk_client)
-{}
+Disk::Disk(double capacity, QString type, int fkClient, int ID, const QString &name) :
+        Component(ID, name),
+        capacity(capacity),
+        type(std::move(type)),
+        fkClient(fkClient) {}

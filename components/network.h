@@ -3,20 +3,21 @@
 
 #include "components/component.h"
 
-class Network : public Component
-{
+class Network : public Component {
 public:
-    Network(const QString &type, int fk_client, int ID, const QString &name);
+    Network(QString type, int fk_client, int ID, const QString &name);
 
+    [[nodiscard]] QString getType() const;
 
-    QString getType() const;
     void setType(const QString &newType);
-    int getFk_client() const;
-    void setFk_client(int newFk_client);
+
+    [[nodiscard]] int getFkClient() const;
+
+    void setFkClient(int newFkClient);
 
 private:
     QString type;
-    int fk_client;
+    int fkClient;
 };
 
 #endif // NETWORK_H

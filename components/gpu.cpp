@@ -1,38 +1,31 @@
 #include "gpu.h"
 
-double Gpu::getMax_frequency() const
-{
-    return max_frequency;
+double Gpu::getMaxFrequency() const {
+    return maxFrequency;
 }
 
-void Gpu::setMax_frequency(double newMax_frequency)
-{
-    max_frequency = newMax_frequency;
+void Gpu::setMaxFrequency(double newMaxFrequency) {
+    maxFrequency = newMaxFrequency;
 }
 
-double Gpu::getVram() const
-{
-    return vram;
+double Gpu::getVRam() const {
+    return vRam;
 }
 
-void Gpu::setVram(double newVram)
-{
-    vram = newVram;
+void Gpu::setVRam(double newVRam) {
+    vRam = newVRam;
 }
 
-int Gpu::getFk_client() const
-{
-    return fk_client;
+int Gpu::getFkClient() const {
+    return fkClient;
 }
 
-void Gpu::setFk_client(int newFk_client)
-{
-    fk_client = newFk_client;
+void Gpu::setFkClient(int newFkClient) {
+    fkClient = newFkClient;
 }
 
-Gpu::Gpu(double max_frequency, double vram, int fk_client, int ID, const QString &name) :
-    Component(ID, name),
-    max_frequency(max_frequency),
-    vram(vram),
-    fk_client(fk_client)
-{}
+Gpu::Gpu(double maxFrequency, double VRam, int fkClient, int ID, const QString &name) :
+        Component(ID, name),
+        maxFrequency(maxFrequency),
+        vRam(VRam),
+        fkClient(fkClient) {}

@@ -4,24 +4,26 @@
 #include "components/component.h"
 #include <QString>
 
-class Disk : public Component
-{
+class Disk : public Component {
 public:
-    Disk(double capacity, const QString &type, int fk_client, int ID, const QString &name);
+    Disk(double capacity, QString type, int fkClient, int ID, const QString &name);
 
-    double getCapacity() const;
+    [[nodiscard]] double getCapacity() const;
+
     void setCapacity(double newCapacity);
 
-    QString getType() const;
+    [[nodiscard]] QString getType() const;
+
     void setType(const QString &newType);
 
-    int getFk_client() const;
-    void setFk_client(int newFk_client);
+    [[nodiscard]] int getFkClient() const;
+
+    void setFkClient(int newFkClient);
 
 private:
     double capacity;
     QString type;
-    int fk_client;
+    int fkClient;
 };
 
 #endif // DISK_H

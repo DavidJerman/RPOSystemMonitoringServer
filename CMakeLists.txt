@@ -15,22 +15,22 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 add_executable(SystemMonitoringServer
-  main.cpp
-  protocol.h protocol.cpp
-  auth.h auth.cpp
-  config.h config.cpp
-  server.h server.cpp
-  components/cpu.h components/cpu.cpp
-  components/disk.h components/disk.cpp
-  components/gpu.h components/gpu.cpp
-  components/network.h components/network.cpp
-  components/ram.h components/ram.cpp
-  components/system.h components/system.cpp
-  components/component.h components/component.cpp
-)
+        main.cpp
+        protocol.h protocol.cpp
+        auth.h auth.cpp
+        config.h config.cpp
+        server.h server.cpp
+        components/cpu.h components/cpu.cpp
+        components/disk.h components/disk.cpp
+        components/gpu.h components/gpu.cpp
+        components/network.h components/network.cpp
+        components/ram.h components/ram.cpp
+        components/system.h components/system.cpp
+        components/component.h components/component.cpp
+        )
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Network)
 
 
 install(TARGETS SystemMonitoringServer
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -1,49 +1,42 @@
 #include "ram.h"
 
-Ram::Ram(double capacity, const QString &type, double frequency, int fk_client, int ID, const QString &name) :
-    Component(ID, name),
-    capacity(capacity),
-    type(type),
-    frequency(frequency),
-    fk_client(fk_client)
-{}
+#include <utility>
 
-double Ram::getCapacity() const
-{
+Ram::Ram(double capacity, QString type, double frequency, int fkClient, int ID, const QString &name) :
+        Component(ID, name),
+        capacity(capacity),
+        type(std::move(type)),
+        frequency(frequency),
+        fkClient(fkClient) {}
+
+double Ram::getCapacity() const {
     return capacity;
 }
 
-void Ram::setCapacity(double newCapacity)
-{
+void Ram::setCapacity(double newCapacity) {
     capacity = newCapacity;
 }
 
-QString Ram::getType() const
-{
+QString Ram::getType() const {
     return type;
 }
 
-void Ram::setType(const QString &newType)
-{
+void Ram::setType(const QString &newType) {
     type = newType;
 }
 
-double Ram::getFrequency() const
-{
+double Ram::getFrequency() const {
     return frequency;
 }
 
-void Ram::setFrequency(double newFrequency)
-{
+void Ram::setFrequency(double newFrequency) {
     frequency = newFrequency;
 }
 
-int Ram::getFk_client() const
-{
-    return fk_client;
+int Ram::getFkClient() const {
+    return fkClient;
 }
 
-void Ram::setFk_client(int newFk_client)
-{
-    fk_client = newFk_client;
+void Ram::setFkClient(int newFkClient) {
+    fkClient = newFkClient;
 }

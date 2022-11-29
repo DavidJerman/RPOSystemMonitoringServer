@@ -1,27 +1,24 @@
 #include "network.h"
 
-Network::Network(const QString &type, int fk_client, int ID, const QString &name) :
-    Component(ID, name),
-    type(type),
-    fk_client(fk_client)
-{}
+#include <utility>
 
-QString Network::getType() const
-{
+Network::Network(QString type, int fk_client, int ID, const QString &name) :
+        Component(ID, name),
+        type(std::move(type)),
+        fkClient(fk_client) {}
+
+QString Network::getType() const {
     return type;
 }
 
-void Network::setType(const QString &newType)
-{
+void Network::setType(const QString &newType) {
     type = newType;
 }
 
-int Network::getFk_client() const
-{
-    return fk_client;
+int Network::getFkClient() const {
+    return fkClient;
 }
 
-void Network::setFk_client(int newFk_client)
-{
-    fk_client = newFk_client;
+void Network::setFkClient(int newFkClient) {
+    fkClient = newFkClient;
 }

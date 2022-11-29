@@ -1,38 +1,31 @@
 #include "cpu.h"
 
-double Cpu::getMax_frequency() const
-{
-    return max_frequency;
+double Cpu::getMaxFrequency() const {
+    return maxFrequency;
 }
 
-void Cpu::setMax_frequency(double newMax_frequency)
-{
-    max_frequency = newMax_frequency;
+void Cpu::setMaxFrequency(double newMaxFrequency) {
+    maxFrequency = newMaxFrequency;
 }
 
-int Cpu::getCores() const
-{
+int Cpu::getCores() const {
     return cores;
 }
 
-void Cpu::setCores(int newCores)
-{
+void Cpu::setCores(int newCores) {
     cores = newCores;
 }
 
-int Cpu::getFk_client() const
-{
-    return fk_client;
+int Cpu::getFkClient() const {
+    return fkClient;
 }
 
-void Cpu::setFk_client(int newFk_client)
-{
-    fk_client = newFk_client;
+void Cpu::setFkClient(int newFkClient) {
+    fkClient = newFkClient;
 }
 
-Cpu::Cpu(double max_frequency, int cores, int fk_client, int ID, const QString &name) :
-    Component(ID, name),
-    max_frequency(max_frequency),
-    cores(cores),
-    fk_client(fk_client)
-{}
+Cpu::Cpu(double maxFrequency, int cores, int fkClient, int ID, const QString &name) :
+        Component(ID, name),
+        maxFrequency(maxFrequency),
+        cores(cores),
+        fkClient(fkClient) {}

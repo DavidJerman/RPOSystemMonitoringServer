@@ -3,25 +3,26 @@
 
 #include "components/component.h"
 
-class Gpu : public Component
-{
+class Gpu : public Component {
 public:
-    Gpu(double max_frequency, double vram, int fk_client, int ID, const QString &name);
+    Gpu(double maxFrequency, double VRam, int fkClient, int ID, const QString &name);
 
+    [[nodiscard]] double getMaxFrequency() const;
 
-    double getMax_frequency() const;
-    void setMax_frequency(double newMax_frequency);
+    void setMaxFrequency(double newMaxFrequency);
 
-    double getVram() const;
-    void setVram(double newVram);
+    [[nodiscard]] double getVRam() const;
 
-    int getFk_client() const;
-    void setFk_client(int newFk_client);
+    void setVRam(double newVRam);
+
+    [[nodiscard]] int getFkClient() const;
+
+    void setFkClient(int newFkClient);
 
 private:
-    double max_frequency;
-    double vram;
-    int fk_client;
+    double maxFrequency;
+    double vRam;
+    int fkClient;
 };
 
 #endif // GPU_H

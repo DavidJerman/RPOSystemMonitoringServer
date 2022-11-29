@@ -20,20 +20,19 @@
  * - add new data.
  * @brief The Protocol class
  */
-class Protocol
-{
+class Protocol {
 public:
     Protocol();
 
     static QByteArray UTF8JsonFromFile(QString fileName);
 
-    static QJsonDocument UTF8ToJsonDocument(const QByteArray& data);
+    static QJsonDocument UTF8ToJsonDocument(const QByteArray &data);
 
-    static QByteArray jsonDocumentToUTF8(const QJsonDocument& data);
+    static QByteArray jsonDocumentToUTF8(const QJsonDocument &data);
 
-    static System* jsonDocumentToSystem(const QJsonDocument& doc);
+    static System *jsonDocumentToSystem(const QJsonDocument &doc);
 
-    static QJsonDocument systemToJsonDocument(const System* system);
+    static QJsonDocument systemToJsonDocument(const System *system);
 };
 
 

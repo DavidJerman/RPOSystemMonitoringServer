@@ -1,6 +1,5 @@
 #include "auth.h"
 
-Auth::Auth()
-{
+Auth::Auth() {
 
 }

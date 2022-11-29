@@ -3,26 +3,31 @@
 
 #include "components/component.h"
 
-class Ram : public Component
-{
+class Ram : public Component {
 public:
-    Ram(double capacity, const QString &type, double frequency, int fk_client, int ID, const QString &name);
+    Ram(double capacity, QString type, double frequency, int fkClient, int ID, const QString &name);
 
+    [[nodiscard]] double getCapacity() const;
 
-    double getCapacity() const;
     void setCapacity(double newCapacity);
-    QString getType() const;
+
+    [[nodiscard]] QString getType() const;
+
     void setType(const QString &newType);
-    double getFrequency() const;
+
+    [[nodiscard]] double getFrequency() const;
+
     void setFrequency(double newFrequency);
-    int getFk_client() const;
-    void setFk_client(int newFk_client);
+
+    [[nodiscard]] int getFkClient() const;
+
+    void setFkClient(int newFkClient);
 
 private:
     double capacity;
     QString type;
     double frequency;
-    int fk_client;
+    int fkClient;
 };
 
 #endif // RAM_H
