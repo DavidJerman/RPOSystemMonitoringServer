@@ -82,10 +82,9 @@ void System::sort() {
         }
     }
     // Add all cpus at the beginning of the list
-    for (auto component: components) {
-        if (isCpu(component)) {
-            components.remove(components.indexOf(component));
-            components.prepend(component);
+    for (int i = 0; i < components.size(); i++) {
+        if (isCpu(components[i])) {
+            components.move(i, 0);
         }
     }
 }

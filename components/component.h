@@ -5,13 +5,13 @@
 
 class Component {
 public:
-    Component(int ID, const QString &name);
+    Component(int id, const QString &name);
 
     virtual ~Component();
 
-    [[nodiscard]] int getID() const;
+    [[nodiscard]] int getId() const;
 
-    void setID(int newID);
+    void setId(int newId);
 
     [[nodiscard]] QString getName() const;
 

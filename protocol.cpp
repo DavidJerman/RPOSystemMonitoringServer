@@ -189,35 +189,112 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
  * @return JSON document
  */
 QJsonDocument Protocol::systemToJsonDocument(System *system) {
-    system->sort();
+    // system->sort();
     // Parse
     // For every component in the system, add it to the JSON object
     QJsonObject object;
     for (const auto &component: system->getComponents()) {
-        QJsonObject componentObject;
         if (component && System::isCpu(component)) {
             auto cpu = dynamic_cast<const Cpu *>(component);
-            componentObject.insert("maxFrequency", cpu->getMaxFrequency());
-            componentObject.insert("cores", cpu->getCores());
+            QJsonObject cpuObject;
+            cpuObject.insert("id", cpu->getId());
+            cpuObject.insert("name", cpu->getName());
+            cpuObject.insert("max_frequency", cpu->getMaxFrequency());
+            cpuObject.insert("cores", cpu->getCores());
+            cpuObject.insert("fk_client", cpu->getFkClient());
+            if (object.contains("cpu")) {
+                auto temp = object["cpu"].toObject();
+                temp.insert("cpu_" + QString::number(temp.size()), cpuObject);
+                object.remove("cpu");
+                object.insert("cpu", temp);
+            } else {
+                QJsonObject comp_type;
+                comp_type.insert("cpu_0", cpuObject);
+                object.insert("cpu", comp_type);
+            }
         } else if (component && System::isDisk(component)) {
             auto disk = dynamic_cast<const Disk *>(component);
-            componentObject.insert("capacity", disk->getCapacity());
-            componentObject.insert("type", disk->getType());
+            QJsonObject diskObject;
+            diskObject.insert("id", disk->getId());
+            diskObject.insert("name", disk->getName());
+            diskObject.insert("capacity", disk->getCapacity());
+            diskObject.insert("type", disk->getType());
+            diskObject.insert("fk_client", disk->getFkClient());
+            if (object.contains("disk")) {
+                auto temp = object["disk"].toObject();
+                temp.insert("disk_" + QString::number(temp.size()), diskObject);
+                object.remove("disk");
+                object.insert("disk", temp);
+            } else {
+                QJsonObject comp_type;
+                comp_type.insert("disk_0", diskObject);
+                object.insert("disk", comp_type);
+            }
         } else if (component && System::isGpu(component)) {
             auto gpu = dynamic_cast<const Gpu *>(component);
-            componentObject.insert("maxFrequency", gpu->getMaxFrequency());
-            componentObject.insert("vRam", gpu->getVRam());
+            QJsonObject gpuObject;
+            gpuObject.insert("id", gpu->getId());
+            gpuObject.insert("name", gpu->getName());
+            gpuObject.insert("max_frequency", gpu->getMaxFrequency());
+            gpuObject.insert("vram", gpu->getVRam());
+            gpuObject.insert("fk_client", gpu->getFkClient());
+            if (object.contains("gpu")) {
+                auto temp = object["gpu"].toObject();
+                temp.insert("gpu_" + QString::number(temp.size()), gpuObject);
+                object.remove("gpu");
+                object.insert("gpu", temp);
+            } else {
+                QJsonObject comp_type;
+                comp_type.insert("gpu_0", gpuObject);
+                object.insert("gpu", comp_type);
+            }
         } else if (component && System::isNetwork(component)) {
             auto network = dynamic_cast<const Network *>(component);
-            componentObject.insert("type", network->getType());
+            QJsonObject networkObject;
+            networkObject.insert("id", network->getId());
+            networkObject.insert("name", network->getName());
+            networkObject.insert("type", network->getType());
+            networkObject.insert("fk_client", network->getFkClient());
+            if (object.contains("network")) {
+                auto temp = object["network"].toObject();
+                temp.insert("network_" + QString::number(temp.size()), networkObject);
+                object.remove("network");
+                object.insert("network", temp);
+            } else {
+                QJsonObject comp_type;
+                comp_type.insert("network_0", networkObject);
+                object.insert("network", comp_type);
+            }
         } else if (component && System::isRam(component)) {
             auto ram = dynamic_cast<const Ram *>(component);
-            componentObject.insert("capacity", ram->getCapacity());
-            componentObject.insert("type", ram->getType());
-            componentObject.insert("frequency", ram->getFrequency());
+            QJsonObject ramObject;
+            ramObject.insert("id", ram->getId());
+            ramObject.insert("name", ram->getName());
+            ramObject.insert("capacity", ram->getCapacity());
+            ramObject.insert("type", ram->getType());
+            ramObject.insert("frequency", ram->getFrequency());
+            ramObject.insert("fk_client", ram->getFkClient());
+            if (object.contains("ram")) {
+                auto temp = object["ram"].toObject();
+                temp.insert("ram_" + QString::number(temp.size()), ramObject);
+                object.remove("ram");
+                object.insert("ram", temp);
+            } else {
+                QJsonObject comp_type;
+                comp_type.insert("ram_0", ramObject);
+                object.insert("ram", comp_type);
+            }
         } else {
             continue;
         }
     }
-    return {};
+    return QJsonDocument(object);
+}
+
+void Protocol::UTF8JsonToFile(QByteArray &json, const QString &fileName) {
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(json);
+        file.close();
+    }
 }

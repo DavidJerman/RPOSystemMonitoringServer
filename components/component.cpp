@@ -2,12 +2,12 @@
 
 Component::~Component() = default;
 
-int Component::getID() const {
+int Component::getId() const {
     return ID;
 }
 
-void Component::setID(int newID) {
-    ID = newID;
+void Component::setId(int newId) {
+    ID = newId;
 }
 
 QString Component::getName() const {
@@ -18,6 +18,6 @@ void Component::setName(const QString &newName) {
     name = newName;
 }
 
-Component::Component(int ID, const QString &name) :
-        ID(ID),
+Component::Component(int id, const QString &name) :
+        ID(id),
         name(name) {}

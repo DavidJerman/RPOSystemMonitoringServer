@@ -26,6 +26,8 @@ public:
 
     static QByteArray UTF8JsonFromFile(const QString& fileName);
 
+    static void UTF8JsonToFile(QByteArray& json, const QString& fileName);
+
     static QJsonDocument UTF8ToJsonDocument(const QByteArray &data);
 
     static QByteArray jsonDocumentToUTF8(const QJsonDocument &data);
