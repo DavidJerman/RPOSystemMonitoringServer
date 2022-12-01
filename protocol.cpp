@@ -3,7 +3,7 @@
 Protocol::Protocol() = default;
 
 /**
- * @brief Loads a byte array from a file.
+ * Loads a byte array from a file.
  * @param fileName File to load from
  * @return Data
  */
@@ -20,7 +20,6 @@ QByteArray Protocol::UTF8JsonFromFile(const QString& fileName) {
 /**
  * Converts a byte array to a JSON document.
  * If invalid empty/invalid data is received, an empty JSON document is returned.
- * @brief Converts a byte array to a JSON document.
  * @param data Byte array
  * @return JSON document
  */
@@ -33,7 +32,6 @@ QJsonDocument Protocol::UTF8ToJsonDocument(const QByteArray &data) {
 /**
  * Converts a JSON document to a byte array.
  * If invalid/empty JSON document is received an empty array is returned.
- * @brief Converts a JSON document to a byte array.
  * @param doc JSON Document to convert
  * @return Byte array
  */
@@ -46,7 +44,6 @@ QByteArray Protocol::jsonDocumentToUTF8(const QJsonDocument &doc) {
 /**
  * Converts a JSON document to a system class that contains components.
  * If the JSON document is invalid or contains invalid data, a nullptr is returned!
- * @brief Converts json document to system object.
  * @param doc JSON Document to convert
  * @return System class
  */
@@ -184,13 +181,10 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
 /**
  * Converts a system object to a JSON document. The object should contain at least some components.
  * If the system class is empty, returns an empty document.
- * @brief Converts a system object to a JSON document.
  * @param system System to convert
  * @return JSON document
  */
 QJsonDocument Protocol::systemToJsonDocument(System *system) {
-    // system->sort();
-    // Parse
     // For every component in the system, add it to the JSON object
     QJsonObject object;
     for (const auto &component: system->getComponents()) {
@@ -291,6 +285,11 @@ QJsonDocument Protocol::systemToJsonDocument(System *system) {
     return QJsonDocument(object);
 }
 
+/**
+ * Saves JSON data to the specified file.
+ * @param json JSON data
+ * @param fileName File name to save to
+ */
 void Protocol::UTF8JsonToFile(QByteArray &json, const QString &fileName) {
     QFile file(fileName);
     if (file.open(QIODevice::WriteOnly)) {
