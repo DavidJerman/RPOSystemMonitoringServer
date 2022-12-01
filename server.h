@@ -2,31 +2,32 @@
 #define SERVER_H
 
 #include <QObject>
+#include <QDebug>
 #include <QList>
 #include <QTcpServer>
 #include <QTcpSocket>
 
 #include "config.h"
 
-class Server {
+class Server
+{
 public:
     Server();
 
     ~Server();
 
 public slots:
-
     // Slots that we connect to signals
     void onNewConnection();
 
     void onReadReady();
+    void onDisconnected();
+
 
 private:
-    QTcpServer *server;
+    QTcpServer* server;
 
-    QList<QTcpSocket *> clients;
-
-    Config config;
+    QList<QTcpSocket*> clients;
 };
 
 #endif // SERVER_H

@@ -1,13 +1,16 @@
 #include <QCoreApplication>
 
 #include "server.h"
-#include "protocol.h"
+
+// Temp
+//#include "config.h"
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
      QCoreApplication a(argc, argv);
 
-    Server server;
+     Server server;
 
-    return QCoreApplication::exec();
+     return a.exec();
 }
