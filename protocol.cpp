@@ -7,7 +7,7 @@ Protocol::Protocol() = default;
  * @param fileName File to load from
  * @return Data
  */
-QByteArray Protocol::UTF8JsonFromFile(const QString& fileName) {
+QByteArray Protocol::UTF8JsonFromFile(const QString &fileName) {
     // Temp
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -49,6 +49,8 @@ QByteArray Protocol::jsonDocumentToUTF8(const QJsonDocument &doc) {
  */
 System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
     // Parse
+    if (doc.isNull())
+        return nullptr;
     if (doc.isEmpty())
         return nullptr;
     auto system = new System();
@@ -296,4 +298,90 @@ void Protocol::UTF8JsonToFile(QByteArray &json, const QString &fileName) {
         file.write(json);
         file.close();
     }
+}
+
+/**
+ * Reads a username from a specified JSON file.
+ * If a username is not found / JSON is invalid, returns an empty string.
+ * @param fileName File name to read from
+ * @return Username
+ */
+QByteArray Protocol::getUsernameFromJson(QByteArray &json) {
+    QJsonDocument document = QJsonDocument::fromJson(json);
+    if (document.isObject()) {
+        QJsonObject object = document.object();
+        if (object.contains("username")) {
+            return object["username"].toString().toUtf8();
+        }
+    }
+    return {};
+}
+
+/**
+ * Reads a password from a specified JSON file.
+ * If a password is not found / JSON is invalid, returns an empty string.
+ * @param fileName File name to read from
+ * @return Password
+ */
+QByteArray Protocol::getPasswordFromJson(QByteArray &json) {
+    QJsonDocument document = QJsonDocument::fromJson(json);
+    if (document.isObject()) {
+        QJsonObject object = document.object();
+        if (object.contains("password")) {
+            return object["password"].toString().toUtf8();
+        }
+    }
+    return {};
+}
+
+/**
+ * Creates an authentication JSON from the specified username and password.
+ * @param username Username
+ * @param password Password
+ * @return JSON file
+ */
+QByteArray Protocol::getAuthenticationJson(QByteArray &username, QByteArray &password) {
+    QJsonObject object;
+    object.insert("username", QString::fromUtf8(username));
+    object.insert("password", QString::fromUtf8(password));
+    return QJsonDocument(object).toJson();
+}
+
+/**
+ * Reads a client ID from a specified JSON file.
+ * If a client ID is not found, an empty string is returned.
+ * @param json JSON file to read from
+ * @return Client ID
+ */
+int Protocol::getClientIDFromJson(QByteArray &json) {
+    QJsonDocument document = QJsonDocument::fromJson(json);
+    if (document.isObject()) {
+        QJsonObject object = document.object();
+        if (object.contains("id")) {
+            return object["id"].toString().toInt();
+        }
+    }
+    return {};
+}
+
+/**
+ * Creates an identification JSON from the given client ID.
+ * @param clientID Client ID
+ * @return Client Identification JSON
+ */
+QByteArray Protocol::getClientIdentificationJson(int &clientID) {
+    QJsonObject object;
+    object.insert("id", clientID);
+    return QJsonDocument(object).toJson();
+}
+
+/**
+ * Creates confirmation JSON from the given confirmation (true/false).
+ * @param confirmation Confirmation
+ * @return Confirmation JSON
+ */
+QByteArray Protocol::getConfirmationJson(bool &confirmation) {
+    QJsonObject object;
+    object.insert("confirmation", confirmation);
+    return QJsonDocument(object).toJson();
 }

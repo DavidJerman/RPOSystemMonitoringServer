@@ -35,6 +35,20 @@ public:
     static System *jsonDocumentToSystem(const QJsonDocument &doc);
 
     static QJsonDocument systemToJsonDocument(System *system);
+
+    static QByteArray getUsernameFromJson(QByteArray &json);
+
+    static QByteArray getPasswordFromJson(QByteArray &json);
+
+    static QByteArray getAuthenticationJson(QByteArray &username, QByteArray &password);
+
+    static int getClientIDFromJson(QByteArray &json);
+
+    static QByteArray getClientIdentificationJson(int &clientID);
+
+    static QByteArray getConfirmationJson(bool &confirmation);
+
+    // TODO: Add data to json methods
 };
 
 

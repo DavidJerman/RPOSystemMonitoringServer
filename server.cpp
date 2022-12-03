@@ -44,7 +44,6 @@ Server::~Server()
  */
 void Server::onNewConnection()
 {
-    // private: QList<QTcpSocket*> clients;
     // Add new client to the list
     auto *client = server->nextPendingConnection();
 
@@ -54,9 +53,6 @@ void Server::onNewConnection()
     // Connect readyRead
 
     clients.append(client);
-    // Remove thread from the list at the end... else CRASH
-    //clients.insert(client, "Unknown");
-
 }
 
 /**
