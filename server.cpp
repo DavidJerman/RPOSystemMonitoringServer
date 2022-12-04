@@ -3,7 +3,7 @@
 /**
  * @brief Constructs the server and loads the config
  */
-Server::Server(QObject *parent): QObject(parent)
+Server::Server()
 {
     // Load config here
 
@@ -78,38 +78,4 @@ void Server::onDisconnected()
         client->deleteLater();
         client = nullptr;
     exit(0);
-}
-
-/**
- * @brief Deletes the server and disconnects all clients
- */
-Server::~Server()
-{
-    server->close();
-    server->deleteLater();
-
-    // TODO: Disconnect all clients
-    for (auto client : clients) {
-        // TODO
-    }
-}
-
-
-/**
- * @brief Accepts the new connection and saves it to a list
- */
-void Server::onNewConnection()
-{
-    // Add new client to the list
-    auto client = server->nextPendingConnection();
-    clients.append(client);
-}
-
-
-/**
- * @brief Reads the client message and processes it
- */
-void Server::onReadReady()
-{
-    // Accept
 }

@@ -9,8 +9,9 @@
 
 #include "config.h"
 
-class Server
+class Server : public QObject
 {
+    Q_OBJECT
 public:
     Server();
 
