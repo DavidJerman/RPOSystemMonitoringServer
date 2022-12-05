@@ -385,3 +385,12 @@ QByteArray Protocol::getConfirmationJson(bool &confirmation) {
     object.insert("confirmation", confirmation);
     return QJsonDocument(object).toJson();
 }
+
+/**
+ * Return an error message.
+ * @param error
+ * @return
+ */
+QByteArray Protocol::getErrorJson(QString &error) {
+    return error.toUtf8();
+}

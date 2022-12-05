@@ -24,9 +24,9 @@ class Protocol {
 public:
     Protocol();
 
-    static QByteArray UTF8JsonFromFile(const QString& fileName);
+    static QByteArray UTF8JsonFromFile(const QString &fileName);
 
-    static void UTF8JsonToFile(QByteArray& json, const QString& fileName);
+    static void UTF8JsonToFile(QByteArray &json, const QString &fileName);
 
     static QJsonDocument UTF8ToJsonDocument(const QByteArray &data);
 
@@ -48,7 +48,7 @@ public:
 
     static QByteArray getConfirmationJson(bool &confirmation);
 
-    // TODO: Add data to json methods
+    static QByteArray getErrorJson(QString &error);
 };
 
 

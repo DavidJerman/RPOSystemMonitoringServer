@@ -6,6 +6,7 @@
 #include <QList>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QSslSocket>
 
 #include "config.h"
 
@@ -20,7 +21,6 @@ public:
 public slots:
     // Slots that we connect to signals
     void onNewConnection();
-
     void onReadReady();
     void onDisconnected();
 
