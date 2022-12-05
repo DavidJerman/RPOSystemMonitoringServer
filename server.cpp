@@ -81,6 +81,7 @@ void Server::onReadReady() {
 //https://socket.io/docs/v3/server-socket-instance/
 //https://socket.io/docs/v3/rooms/
 void Server::onDisconnected() {   //QTcpSocket socket
+    // TODO: Change to QSSLSocket
     auto client = reinterpret_cast<QTcpSocket *>(sender());
     if (clients.contains(client))
         clients.remove(clients.indexOf(client));
