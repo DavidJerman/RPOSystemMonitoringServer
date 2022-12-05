@@ -394,3 +394,27 @@ QByteArray Protocol::getConfirmationJson(bool &confirmation) {
 QByteArray Protocol::getErrorJson(QString &error) {
     return error.toUtf8();
 }
+
+/**
+ * Converts JSON toa message.
+ * @param messageType Message type - auth/id/system/data
+ * @return Converted message
+ */
+QByteArray Protocol::jsonToMessage(MESSAGE messageType, const QByteArray &data) {
+    qint64 size = 8 + data.size();
+    QByteArray sendData = QByteArray(sizeof(qint64), (qint64)(size)) + QByteArray(sizeof(qint64), (qint64)(messageType)) + data;
+    return std::move(sendData);
+}
+
+/**
+ * Gets the message(s) ty
+ * @param message
+ * @return
+ */
+MESSAGE Protocol::getMessageType(const QByteArray &message) {
+
+}
+
+QList<QByteArray> Protocol::messageToJson(const QByteArray &message) {
+
+}

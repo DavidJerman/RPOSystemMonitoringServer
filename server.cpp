@@ -27,7 +27,7 @@ Server::~Server() {
     server->close();
     server->deleteLater();
 
-    // TODO: Disconnect all clients
+    // TODO: Remove all clients and sessions
     for (auto client: clients) {
         client->close();
         //onDisconnected() ??
@@ -79,12 +79,27 @@ void Server::onReadReady() {
 //https://en.cppreference.com/w/cpp/language/reinterpret_cast
 //https://doc.qt.io/archives/qt-4.8/signalsandslots.html#advanced-signals-and-slots-usage
 //https://socket.io/docs/v3/server-socket-instance/
-//https://socket.io/docs/v3/rooms/
-void Server::onDisconnected() {   //QTcpSocket socket
+//https://socket.io/docs/v3/rooms/kvoid Server::onDisconnected() {   //QTcpSocket socket
     // TODO: Change to QSSLSocket
     auto client = reinterpret_cast<QTcpSocket *>(sender());
     if (clients.contains(client))
         clients.remove(clients.indexOf(client));
     client->deleteLater();
     client = nullptr;
+}
+
+bool Server::containsSocket(QTcpSocket* socket){
+    //QMap<QTcpSocket*, Session*> clients;
+        return clients.contains(socket);
+}
+
+/**
+ *
+ * @param clientSocket
+ * če ni našel socket-a
+ * @return null_ptr
+ */
+
+Session* Server::getSession(QTcpSocket* clientSocket) const {
+
 }

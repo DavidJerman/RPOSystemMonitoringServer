@@ -7,15 +7,20 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QSslSocket>
+#include <QMap>
 
 #include "config.h"
+#include "Session.h"
 
 class Server : public QObject
 {
     Q_OBJECT
 public:
     Server();
-
+    //funkcija gre čez vse Session in poišče client ki ima ta session, vrne session.
+    bool containsSocket(QTcpSocket* socket);
+    Session* getSession(QTcpSocket* clientSocket) const;
+    //Session clientHasSession();
     ~Server();
 
 public slots:
@@ -28,7 +33,7 @@ public slots:
 private:
     QTcpServer* server;
 
-    QList<QTcpSocket*> clients;
+    QMap<QTcpSocket*, Session*> clients;
 };
 
 #endif // SERVER_H

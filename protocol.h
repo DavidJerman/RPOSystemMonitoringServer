@@ -11,6 +11,14 @@
 
 #include "components/system.h"
 
+enum MESSAGE {
+    UNKNOWN,
+    AUTH,
+    ID,
+    SYSTEM,
+    DATA
+};
+
 /**
  * This class defines the protocol.
  * The structure used for sending data is json.
@@ -49,6 +57,12 @@ public:
     static QByteArray getConfirmationJson(bool &confirmation);
 
     static QByteArray getErrorJson(QString &error);
+
+    static QByteArray jsonToMessage(MESSAGE messageType, const QByteArray &data);
+
+    static MESSAGE getMessageType(const QByteArray &message);
+
+    static QList<QByteArray> messageToJson(const QByteArray &message);
 };
 
 
