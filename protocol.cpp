@@ -401,20 +401,59 @@ QByteArray Protocol::getErrorJson(QString &error) {
  * @return Converted message
  */
 QByteArray Protocol::jsonToMessage(MESSAGE messageType, const QByteArray &data) {
-    qint64 size = 8 + data.size();
-    QByteArray sendData = QByteArray(sizeof(qint64), (qint64)(size)) + QByteArray(sizeof(qint64), (qint64)(messageType)) + data;
+    quint64 size = data.size();
+    size += 9;
+    QByteArray sizeArray;
+    sizeArray.append((char)(size >> 56));
+    sizeArray.append((char)(size >> 48));
+    sizeArray.append((char)(size >> 40));
+    sizeArray.append((char)(size >> 32));
+    sizeArray.append((char)(size >> 24));
+    sizeArray.append((char)(size >> 16));
+    sizeArray.append((char)(size >> 8));
+    sizeArray.append((char)(size));
+    QByteArray messageTypeArray;
+    messageTypeArray.append(static_cast<char>(messageType));
+    QByteArray sendData = sizeArray + messageTypeArray + data;
     return std::move(sendData);
 }
 
 /**
  * Gets the message(s) ty
- * @param message
- * @return
+ * @param message Message
+ * @return Message types
  */
-MESSAGE Protocol::getMessageType(const QByteArray &message) {
+QList<MESSAGE> Protocol::getMessageType(const QByteArray &message) {
+    QList<MESSAGE> messageTypes;
+    qint64 size = 0;
+    auto ptr = message.begin();
+    do {
+        ptr += sizeof(qint64);
+        auto messageType = (MESSAGE)QByteArray(ptr, 1).at(0);
+        messageTypes.append(messageType);
+        ptr += size - 8;
 
+    } while (ptr < message.end());
+    return messageTypes;
 }
 
+/**
+ * Gets the message(s) data.
+ * @param message Message
+ * @return Message data
+ */
 QList<QByteArray> Protocol::messageToJson(const QByteArray &message) {
+    QList<QByteArray> jsons;
+    qint64 size = 0;
+    auto ptr = message.begin();
+    do {
+        size += ((qint64)(*ptr) << 56) + ((qint64)(*(ptr + 1)) << 48) + ((qint64)(*(ptr + 2)) << 40) + ((qint64)(*(ptr + 3)) << 32) + ((qint64)(*(ptr + 4)) << 24) + ((qint64)(*(ptr + 5)) << 16) + ((qint64)(*(ptr + 6)) << 8) + (qint64)(*(ptr + 7));
+        ptr += sizeof(qint64);
+        ptr += 1;
+        auto data = message.mid(ptr - message.begin(), size - 9);
+        jsons.append(data);
+        ptr += size - 9;
 
+    } while (ptr < message.end());
+    return jsons;
 }

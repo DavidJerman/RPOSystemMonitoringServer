@@ -18,7 +18,7 @@ Config::Config()
  * @param fileName Configuration file name
  * @throws FileException
  */
-void Config::loadFromFile(QString fileName) {
+void Config::loadFromFile(const QString& fileName) {
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -72,7 +72,7 @@ void Config::addProperty(QString property, QString value) {
  * @param property Property
  * @return Property value
  */
-QString Config::getValue(QString property) {
+QString Config::getProperty(QString property) {
     auto key = config.find(property);
     if (key == config.end()) {
         auto message = QString("Property " + property + " not found!");
@@ -87,7 +87,7 @@ QString Config::getValue(QString property) {
  * @brief Returns configuration properties
  * @return List of properties
  */
-const QList<QString> Config::getProperties() {
+QList<QString> Config::getProperties() {
     return config.keys();
 }
 
@@ -106,7 +106,7 @@ bool Config::isEmpty() noexcept {
  * @param property Property
  * @return Has property
  */
-bool Config::hasProperty(QString property) {
+bool Config::hasProperty(const QString& property) {
     return config.contains(property);
 }
 
@@ -116,7 +116,7 @@ bool Config::hasProperty(QString property) {
  * @param value Value
  * @return Has value
  */
-bool Config::hasValue(QString value) {
+bool Config::hasValue(const QString& value) {
     for (auto &_value: config.values()) {
         if (QString::compare(_value, value) == 0) {
             return true;
@@ -186,7 +186,7 @@ QVector<QByteArray> Config::split(QByteArray &data, char delimiter) {
  */
 QByteArray Config::join(QVector<QByteArray> &vector) {
     QByteArray data;
-    for (auto date: vector) {
+    for (const auto& date: vector) {
         data.append(date);
     }
     return data;

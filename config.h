@@ -14,19 +14,19 @@ class Config {
 public:
     Config();
 
-    void loadFromFile(QString fileName);
+    void loadFromFile(const QString& fileName);
 
     void addProperty(QString property, QString value);
 
-    QString getValue(QString property);
+    QString getProperty(QString property);
 
-    const QList<QString> getProperties();
+    QList<QString> getProperties();
 
     bool isEmpty() noexcept;
 
-    bool hasProperty(QString property);
+    bool hasProperty(const QString& property);
 
-    bool hasValue(QString value);
+    bool hasValue(const QString& value);
 
     bool isLoaded();
 

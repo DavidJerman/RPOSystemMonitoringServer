@@ -1,4 +1,5 @@
 #include "server.h"
+#include "config.h"
 
 /**
  * @brief Constructs the server and loads the config
@@ -10,11 +11,28 @@ Server::Server() {
 
     connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 
-    // TODO: Load config from file
-    if (!server->listen(QHostAddress::Any, 1234)) {
-        qDebug() << "Server se ni zmogel zagnat.";
+    // Load the config
+    Config config;
+    QString port;
+    try {
+        config.loadFromFile("config.cfg");
+        if (config.isEmpty()) {
+            qDebug() << "Config is empty! Will use default values.";
+            return;
+        }
+        port = config.getProperty("port");
+        if (port.isEmpty()) {
+            qDebug() << "Port is empty! Will use default value: 1234.";
+            port = "1234";
+        }
+    } catch (const std::exception& e) {
+        qDebug() << "Error loading config: " << e.what();
+    }
+
+    if (!server->listen(QHostAddress::Any, port.toInt())) {
+        qDebug() << "Server could not start!";
     } else {
-        qDebug() << "Server se je zagnal.";
+        qDebug() << "Server started!";
     }
 }
 
@@ -27,11 +45,10 @@ Server::~Server() {
     server->close();
     server->deleteLater();
 
-    // TODO: Remove all clients and sessions
-    for (auto client: clients) {
+    for (auto &client: clients.keys()) {
         client->close();
-        //onDisconnected() ??
     }
+    clients.clear();
 }
 //https://www.bogotobogo.com/cplusplus/sockets_server_client.php
 //https://www.youtube.com/watch?v=j9uAfTAZrdM
@@ -47,9 +64,9 @@ void Server::onNewConnection() {
     connect(client, SIGNAL(readyRead()), this, SLOT(onReadReady()));
     connect(client, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 
-    // Connect readyRead
-
-    clients.append(client);
+    // Create new session
+    auto *session = new Session();
+    clients.insert(client, session);
 }
 
 /**
@@ -76,21 +93,8 @@ void Server::onReadReady() {
     //    a) Accept data and check if needed to be saved
 }
 
-//https://en.cppreference.com/w/cpp/language/reinterpret_cast
-//https://doc.qt.io/archives/qt-4.8/signalsandslots.html#advanced-signals-and-slots-usage
-//https://socket.io/docs/v3/server-socket-instance/
-//https://socket.io/docs/v3/rooms/kvoid Server::onDisconnected() {   //QTcpSocket socket
-    // TODO: Change to QSSLSocket
-    auto client = reinterpret_cast<QTcpSocket *>(sender());
-    if (clients.contains(client))
-        clients.remove(clients.indexOf(client));
-    client->deleteLater();
-    client = nullptr;
-}
-
-bool Server::containsSocket(QTcpSocket* socket){
-    //QMap<QTcpSocket*, Session*> clients;
-        return clients.contains(socket);
+bool Server::containsSocket(QTcpSocket *socket) {
+    return clients.contains(socket);
 }
 
 /**
@@ -99,7 +103,16 @@ bool Server::containsSocket(QTcpSocket* socket){
  * če ni našel socket-a
  * @return null_ptr
  */
+Session *Server::getSession(QTcpSocket *clientSocket) const {
+    if (clients.contains(clientSocket)) {
+        return clients.value(clientSocket);
+    }
+    return nullptr;
+}
 
-Session* Server::getSession(QTcpSocket* clientSocket) const {
-
+void Server::onDisconnected() {
+    auto socket = reinterpret_cast<QTcpSocket *>(sender());
+    if (clients.contains(socket))
+        clients.remove(socket);
+    socket->deleteLater();
 }

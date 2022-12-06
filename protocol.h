@@ -60,7 +60,7 @@ public:
 
     static QByteArray jsonToMessage(MESSAGE messageType, const QByteArray &data);
 
-    static MESSAGE getMessageType(const QByteArray &message);
+    static QList<MESSAGE> getMessageType(const QByteArray &message);
 
     static QList<QByteArray> messageToJson(const QByteArray &message);
 };
