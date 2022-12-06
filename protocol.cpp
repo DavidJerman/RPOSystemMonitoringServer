@@ -18,36 +18,13 @@ QByteArray Protocol::UTF8JsonFromFile(const QString &fileName) {
 }
 
 /**
- * Converts a byte array to a JSON document.
- * If invalid empty/invalid data is received, an empty JSON document is returned.
- * @param data Byte array
- * @return JSON document
- */
-QJsonDocument Protocol::UTF8ToJsonDocument(const QByteArray &data) {
-    if (data.size() == 0)
-        return {};
-    return QJsonDocument::fromJson(data);
-}
-
-/**
- * Converts a JSON document to a byte array.
- * If invalid/empty JSON document is received an empty array is returned.
- * @param doc JSON Document to convert
- * @return Byte array
- */
-QByteArray Protocol::jsonDocumentToUTF8(const QJsonDocument &doc) {
-    if (doc.isNull())
-        return {};
-    return doc.toJson();
-}
-
-/**
- * Converts a JSON document to a system class that contains components.
- * If the JSON document is invalid or contains invalid data, a nullptr is returned!
- * @param doc JSON Document to convert
+ * Converts JSON to a system object that contains components.
+ * If the JSON is invalid or contains invalid data, a nullptr is returned!
+ * @param doc JSON to convert
  * @return System class
  */
-System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
+System* Protocol::jsonToSystem(const QByteArray &json) {
+    auto doc = QJsonDocument::fromJson(json);
     // Parse
     if (doc.isNull())
         return nullptr;
@@ -181,12 +158,12 @@ System *Protocol::jsonDocumentToSystem(const QJsonDocument &doc) {
 }
 
 /**
- * Converts a system object to a JSON document. The object should contain at least some components.
+ * Converts a system object to JSO. The object should contain at least some components.
  * If the system class is empty, returns an empty document.
  * @param system System to convert
- * @return JSON document
+ * @return JSON
  */
-QJsonDocument Protocol::systemToJsonDocument(System *system) {
+QByteArray Protocol::systemToJson(System *system) {
     // For every component in the system, add it to the JSON object
     QJsonObject object;
     for (const auto &component: system->getComponents()) {
@@ -284,7 +261,7 @@ QJsonDocument Protocol::systemToJsonDocument(System *system) {
             continue;
         }
     }
-    return QJsonDocument(object);
+    return QJsonDocument(object).toJson();
 }
 
 /**

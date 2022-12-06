@@ -36,13 +36,9 @@ public:
 
     static void UTF8JsonToFile(QByteArray &json, const QString &fileName);
 
-    static QJsonDocument UTF8ToJsonDocument(const QByteArray &data);
+    static System *jsonToSystem(const QByteArray &json);
 
-    static QByteArray jsonDocumentToUTF8(const QJsonDocument &data);
-
-    static System *jsonDocumentToSystem(const QJsonDocument &doc);
-
-    static QJsonDocument systemToJsonDocument(System *system);
+    static QByteArray systemToJson(System *system);
 
     static QByteArray getUsernameFromJson(QByteArray &json);
 
