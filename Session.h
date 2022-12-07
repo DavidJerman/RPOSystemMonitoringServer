@@ -13,11 +13,22 @@ public:
 
     virtual ~Session();
 
+    [[nodiscard]] bool isAuthorized() const;
+
+    [[nodiscard]] bool isAuthenticated() const;
+
+    [[nodiscard]] int getClientId() const;
+
+    void setClientId(int clientId);
+
+    [[nodiscard]] int getUserId() const;
+
+    void setUserId(int userId);
+
 private:
     // Create a session with a client socket, client id and user id
     int clientID;
     int userID;
-    bool validConnection;
 };
 
 

@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include "Session.h"
+#include "protocol.h"
 
 class Server : public QObject
 {
@@ -21,7 +22,7 @@ public:
     bool containsSocket(QTcpSocket* socket);
     Session* getSession(QTcpSocket* clientSocket) const;
     //Session clientHasSession();
-    ~Server();
+    ~Server() override;
 
 public slots:
     // Slots that we connect to signals
@@ -31,6 +32,8 @@ public slots:
 
 
 private:
+    int authenticate(QTcpSocket *client, const QByteArray& username, const QByteArray& password);
+
     QTcpServer* server;
 
     QMap<QTcpSocket*, Session*> clients;

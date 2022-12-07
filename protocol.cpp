@@ -283,7 +283,7 @@ void Protocol::UTF8JsonToFile(QByteArray &json, const QString &fileName) {
  * @param fileName File name to read from
  * @return Username
  */
-QByteArray Protocol::getUsernameFromJson(QByteArray &json) {
+QByteArray Protocol::getUsername(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
     if (document.isObject()) {
         QJsonObject object = document.object();
@@ -300,7 +300,7 @@ QByteArray Protocol::getUsernameFromJson(QByteArray &json) {
  * @param fileName File name to read from
  * @return Password
  */
-QByteArray Protocol::getPasswordFromJson(QByteArray &json) {
+QByteArray Protocol::getPassword(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
     if (document.isObject()) {
         QJsonObject object = document.object();
@@ -330,7 +330,7 @@ QByteArray Protocol::getAuthenticationJson(QByteArray &username, QByteArray &pas
  * @param json JSON file to read from
  * @return Client ID
  */
-int Protocol::getClientIDFromJson(QByteArray &json) {
+int Protocol::getClientId(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
     if (document.isObject()) {
         QJsonObject object = document.object();

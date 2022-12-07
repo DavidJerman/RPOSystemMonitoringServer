@@ -40,13 +40,13 @@ public:
 
     static QByteArray systemToJson(System *system);
 
-    static QByteArray getUsernameFromJson(QByteArray &json);
+    static QByteArray getUsername(QByteArray &json);
 
-    static QByteArray getPasswordFromJson(QByteArray &json);
+    static QByteArray getPassword(QByteArray &json);
 
     static QByteArray getAuthenticationJson(QByteArray &username, QByteArray &password);
 
-    static int getClientIDFromJson(QByteArray &json);
+    static int getClientId(QByteArray &json);
 
     static QByteArray getClientIdentificationJson(int &clientID);
 

@@ -78,6 +78,7 @@ void Server::onReadReady() {
 
     QByteArray wholeData = client->readAll();
 
+    // TODO: Remove for production
     qDebug() << "User " << client->peerAddress().toString() << " sent: " << wholeData;
 
     // 1: Authentication
@@ -91,6 +92,41 @@ void Server::onReadReady() {
     //    b) Remove system and replace with new one
     // 4: Data
     //    a) Accept data and check if needed to be saved
+
+    auto messageTypes = Protocol::getMessageType(wholeData);
+    auto messageJsons = Protocol::messageToJson(wholeData);
+    if (messageTypes.size() != messageJsons.size()) {
+        qDebug() << "Error: Message types and message jsons are not the same size!";
+        return;
+    }
+    if (messageTypes.empty()) {
+        qDebug() << "Error: Message types and message jsons are empty!";
+        return;
+    }
+
+    for (int i = 0; i < messageTypes.size(); i++) {
+        auto messageType = messageTypes.at(i);
+        auto messageJson = messageJsons.at(i);
+
+        /**
+         * Checks for authentication
+         */
+        auto *session = clients.value(client);
+        if (!session->isAuthenticated()) {
+            bool confirm = false;
+            if (messageType == MESSAGE::AUTH) {
+                auto username = Protocol::getUsername(messageJson);
+                auto password = Protocol::getPassword(messageJson);
+            }
+            auto json = Protocol::getConfirmationJson(confirm);
+            auto message = Protocol::jsonToMessage(MESSAGE::AUTH, json);
+            client->write(message);
+            if (!confirm) {
+                client->close();
+                return;
+            }
+        }
+    }
 }
 
 bool Server::containsSocket(QTcpSocket *socket) {
@@ -115,4 +151,9 @@ void Server::onDisconnected() {
     if (clients.contains(socket))
         clients.remove(socket);
     socket->deleteLater();
+}
+
+int Server::authenticate(QTcpSocket *client, const QByteArray& username, const QByteArray& password) {
+    // Ce najdes uporabnika v bazi vrni njegov ID, ce ne vrni 0
+    return 0;
 }
