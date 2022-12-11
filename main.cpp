@@ -9,10 +9,6 @@ int main(int argc, char *argv[])
 
     Server server;
 
-    auto data = Protocol::jsonToMessage(AUTH, "Hello World");
-    Protocol::messageToJson(data);
-    Protocol::getMessageType(data);
-
 
 
     return QCoreApplication::exec();

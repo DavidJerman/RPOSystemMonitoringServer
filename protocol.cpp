@@ -326,7 +326,7 @@ QByteArray Protocol::getAuthenticationJson(QByteArray &username, QByteArray &pas
 
 /**
  * Reads a client ID from a specified JSON file.
- * If a client ID is not found, an empty string is returned.
+ * If a client ID is not found, 0 is returned.
  * @param json JSON file to read from
  * @return Client ID
  */
@@ -338,7 +338,7 @@ int Protocol::getClientId(QByteArray &json) {
             return object["id"].toString().toInt();
         }
     }
-    return {};
+    return 0;
 }
 
 /**
@@ -357,7 +357,7 @@ QByteArray Protocol::getClientIdentificationJson(int &clientID) {
  * @param confirmation Confirmation
  * @return Confirmation JSON
  */
-QByteArray Protocol::getConfirmationJson(bool &confirmation) {
+QByteArray Protocol::getConfirmationJson(bool confirmation) {
     QJsonObject object;
     object.insert("confirmation", confirmation);
     return QJsonDocument(object).toJson();

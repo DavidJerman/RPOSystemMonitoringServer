@@ -51,7 +51,7 @@ public:
 
     static QByteArray getClientIdentificationJson(int &clientID);
 
-    static QByteArray getConfirmationJson(bool &confirmation);
+    static QByteArray getConfirmationJson(bool confirmation);
 
     static QByteArray getErrorJson(QString &error);
 

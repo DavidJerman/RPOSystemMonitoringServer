@@ -76,66 +76,7 @@ void Server::onReadReady() {
 
     QByteArray wholeData = client->readAll();
 
-    // TODO: Remove for production
-    qDebug() << "User " << client->peerAddress().toString() << " sent: " << wholeData;
-
-    // 1: Authentication
-    //    a) Accept connection
-    //    b) Reject connection
-    // 2: Identification
-    //    a) Send new identification
-    //    b) Send old identification
-    // 3: New system
-    //    a) Add new system
-    //    b) Remove system and replace with new one
-    // 4: Data
-    //    a) Accept data and check if needed to be saved
-
-    auto messageTypes = Protocol::getMessageType(wholeData);
-    auto messageJsons = Protocol::messageToJson(wholeData);
-    if (messageTypes.size() != messageJsons.size()) {
-        qDebug() << "Error: Message types and message jsons are not the same size!";
-        return;
-    }
-    if (messageTypes.empty()) {
-        qDebug() << "Error: Message types and message jsons are empty!";
-        return;
-    }
-
-    for (int i = 0; i < messageTypes.size(); i++) {
-        auto messageType = messageTypes.at(i);
-        auto messageJson = messageJsons.at(i);
-
-        /**
-         * Checks for authentication
-         */
-        auto *session = clients.value(client);
-        if (!session->isAuthenticated()) {
-            bool confirm = false;
-            if (messageType == MESSAGE::AUTH) {
-                auto username = Protocol::getUsername(messageJson);
-                auto password = Protocol::getPassword(messageJson);
-                auto res = authenticate(username, password);
-                if (res != 0) {
-                    confirm = true;
-                    session->setUserId(true);
-                }
-            }
-            auto json = Protocol::getConfirmationJson(confirm);
-            auto message = Protocol::jsonToMessage(MESSAGE::CONFIRM, json);
-            client->write(message);
-            if (!confirm) {
-                client->close();
-                return;
-            }
-        }
-        if (!session->isAuthorized()) {
-            bool confirm = false;
-            if (messageType == MESSAGE::ID) {
-                auto id = Protocol::getClientId(messageJson);
-            }
-        }
-    }
+    parseMessage(client, wholeData);
 }
 
 bool Server::containsSocket(QTcpSocket *socket) {
@@ -165,4 +106,17 @@ void Server::onDisconnected() {
 int Server::authenticate(QTcpSocket *client, const QByteArray& username, const QByteArray& password) {
     // Ce najdes uporabnika v bazi vrni njegov ID, ce ne vrni 0
     return 0;
+}
+
+
+int Server::identify(int userID, int clientID) {
+    // TODO: Preveri, ce za tega uporbnika ze obstaja client ID, ce ne ga dodaj v PB in vrni nov ID, sicer vrni obstojeci ID
+
+    return 1;
+}
+
+bool Server::addSystem(int userID, int clientID, System *system) {
+    // TODO: Dodaj sistem v PB in vrni true, ce je uspesno dodan (oz posodobljen), sicer vrni false
+
+    return true;
 }

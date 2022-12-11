@@ -7,6 +7,7 @@
 Session::Session() {
     clientID = 0;
     userID = 0;
+    systemAdded = false;
 }
 
 Session::~Session() = default;
@@ -33,4 +34,20 @@ int Session::getUserId() const {
 
 void Session::setUserId(int userId) {
     userID = userId;
+}
+
+bool Session::isSystemAdded() const {
+    return systemAdded;
+}
+
+void Session::setSystemAdded(bool _systemAdded) {
+    this->systemAdded = _systemAdded;
+}
+
+void Session::addSystem(System *_system) {
+    this->system = _system;
+}
+
+System *Session::getSystem() const {
+    return system;
 }
