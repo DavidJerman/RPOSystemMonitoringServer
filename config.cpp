@@ -1,3 +1,4 @@
+#include <QDir>
 #include "config.h"
 
 
@@ -19,6 +20,9 @@ Config::Config()
  * @throws FileException
  */
 void Config::loadFromFile(const QString& fileName) {
+    // Print working directory
+    qDebug() << "Working directory: " << QDir::currentPath();
+
     QFile file(fileName);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {

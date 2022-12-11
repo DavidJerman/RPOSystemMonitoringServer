@@ -13,5 +13,7 @@ int main(int argc, char *argv[])
     Protocol::messageToJson(data);
     Protocol::getMessageType(data);
 
+
+
     return QCoreApplication::exec();
 }

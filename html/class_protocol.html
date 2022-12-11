@@ -119,10 +119,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e092969e30389b6f1672006a6569778"><td class="memItemLeft" align="right" valign="top">static QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a0e092969e30389b6f1672006a6569778">jsonDocumentToUTF8</a> (const QJsonDocument &amp;data)</td></tr>
 <tr class="memdesc:a0e092969e30389b6f1672006a6569778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a JSON document to a byte array.  <a href="class_protocol.html#a0e092969e30389b6f1672006a6569778">More...</a><br /></td></tr>
 <tr class="separator:a0e092969e30389b6f1672006a6569778"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c2758f345b470a5108ac8590c5adeb1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_system.html">System</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1">jsonDocumentToSystem</a> (const QJsonDocument &amp;doc)</td></tr>
+<tr class="memitem:a6c2758f345b470a5108ac8590c5adeb1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_system.html">System</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1">jsonToSystem</a> (const QJsonDocument &amp;doc)</td></tr>
 <tr class="memdesc:a6c2758f345b470a5108ac8590c5adeb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts json document to system object.  <a href="class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1">More...</a><br /></td></tr>
 <tr class="separator:a6c2758f345b470a5108ac8590c5adeb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7045ea8251f789caa167c8b34fabf5a"><td class="memItemLeft" align="right" valign="top">static QJsonDocument&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#aa7045ea8251f789caa167c8b34fabf5a">systemToJsonDocument</a> (const <a class="el" href="class_system.html">System</a> *system)</td></tr>
+<tr class="memitem:aa7045ea8251f789caa167c8b34fabf5a"><td class="memItemLeft" align="right" valign="top">static QJsonDocument&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#aa7045ea8251f789caa167c8b34fabf5a">systemToJson</a> (const <a class="el" href="class_system.html">System</a> *system)</td></tr>
 <tr class="memdesc:aa7045ea8251f789caa167c8b34fabf5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a system object to a JSON document.  <a href="class_protocol.html#aa7045ea8251f789caa167c8b34fabf5a">More...</a><br /></td></tr>
 <tr class="separator:aa7045ea8251f789caa167c8b34fabf5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -153,7 +153,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6c2758f345b470a5108ac8590c5adeb1" name="a6c2758f345b470a5108ac8590c5adeb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c2758f345b470a5108ac8590c5adeb1">&#9670;&#160;</a></span>jsonDocumentToSystem()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c2758f345b470a5108ac8590c5adeb1">&#9670;&#160;</a></span>jsonToSystem()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -162,7 +162,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_system.html">System</a> * Protocol::jsonDocumentToSystem </td>
+          <td class="memname"><a class="el" href="class_system.html">System</a> * Protocol::jsonToSystem </td>
           <td>(</td>
           <td class="paramtype">const QJsonDocument &amp;&#160;</td>
           <td class="paramname"><em>doc</em></td><td>)</td>
@@ -223,7 +223,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="aa7045ea8251f789caa167c8b34fabf5a" name="aa7045ea8251f789caa167c8b34fabf5a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7045ea8251f789caa167c8b34fabf5a">&#9670;&#160;</a></span>systemToJsonDocument()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7045ea8251f789caa167c8b34fabf5a">&#9670;&#160;</a></span>systemToJson()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -232,7 +232,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">QJsonDocument Protocol::systemToJsonDocument </td>
+          <td class="memname">QJsonDocument Protocol::systemToJson </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_system.html">System</a> *&#160;</td>
           <td class="paramname"><em>system</em></td><td>)</td>

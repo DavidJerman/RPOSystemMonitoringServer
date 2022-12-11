@@ -12,21 +12,15 @@ Server::Server() {
     connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 
     // Load the config
-    Config config;
     QString port;
-    try {
-        config.loadFromFile("config.cfg");
-        if (config.isEmpty()) {
-            qDebug() << "Config is empty! Will use default values.";
-            return;
-        }
-        port = config.getProperty("port");
-        if (port.isEmpty()) {
-            qDebug() << "Port is empty! Will use default value: 1234.";
-            port = "1234";
-        }
-    } catch (const std::exception& e) {
-        qDebug() << "Error loading config: " << e.what();
+    if (config.isEmpty()) {
+        qDebug() << "Config is empty! Will use default values.";
+        return;
+    }
+    port = config.getProperty("ServerPort");
+    if (port.isEmpty()) {
+        qDebug() << "Port is empty! Will use default value: 1234.";
+        port = "1234";
     }
 
     if (!server->listen(QHostAddress::Any, port.toInt())) {
@@ -34,6 +28,10 @@ Server::Server() {
     } else {
         qDebug() << "Server started!";
     }
+
+    // TODO: Remove
+    authenticate("david", "davidpassword");
+    authenticate("david", "davidpassword1");
 }
 
 
@@ -117,13 +115,24 @@ void Server::onReadReady() {
             if (messageType == MESSAGE::AUTH) {
                 auto username = Protocol::getUsername(messageJson);
                 auto password = Protocol::getPassword(messageJson);
+                auto res = authenticate(username, password);
+                if (res != 0) {
+                    confirm = true;
+                    session->setUserId(true);
+                }
             }
             auto json = Protocol::getConfirmationJson(confirm);
-            auto message = Protocol::jsonToMessage(MESSAGE::AUTH, json);
+            auto message = Protocol::jsonToMessage(MESSAGE::CONFIRM, json);
             client->write(message);
             if (!confirm) {
                 client->close();
                 return;
+            }
+        }
+        if (!session->isAuthorized()) {
+            bool confirm = false;
+            if (messageType == MESSAGE::ID) {
+                auto id = Protocol::getClientId(messageJson);
             }
         }
     }

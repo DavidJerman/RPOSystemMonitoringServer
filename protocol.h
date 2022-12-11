@@ -16,7 +16,8 @@ enum MESSAGE {
     AUTH,
     ID,
     SYSTEM,
-    DATA
+    DATA,
+    CONFIRM
 };
 
 /**
