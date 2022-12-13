@@ -26,7 +26,12 @@ add_executable(SystemMonitoringServer
         components/ram.h components/ram.cpp
         components/system.h components/system.cpp
         components/component.h components/component.cpp
-        Session.cpp Session.h)
+        Session.cpp Session.h
+        Constants.h
+        tests/test_1_authentication.h
+        tests/test_0_connection.h 
+        tests/run_tests.h
+        Utils.h)
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Sql)
 
 install(TARGETS SystemMonitoringServer

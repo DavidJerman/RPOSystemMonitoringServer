@@ -28,10 +28,6 @@ Server::Server() {
     } else {
         qDebug() << "Server started!";
     }
-
-    // TODO: Remove
-    authenticate("david", "davidpassword");
-    authenticate("david", "davidpassword1");
 }
 
 
@@ -57,7 +53,7 @@ void Server::onNewConnection() {
     // Add new client to the list
     auto *client = server->nextPendingConnection();
 
-    qDebug() << "User connected: " << client->peerAddress().toString();
+    // qDebug() << "User connected: " << client->peerAddress().toString();
 
     connect(client, SIGNAL(readyRead()), this, SLOT(onReadReady()));
     connect(client, SIGNAL(disconnected()), this, SLOT(onDisconnected()));

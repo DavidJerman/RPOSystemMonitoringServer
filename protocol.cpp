@@ -23,7 +23,7 @@ QByteArray Protocol::UTF8JsonFromFile(const QString &fileName) {
  * @param doc JSON to convert
  * @return System class
  */
-System* Protocol::jsonToSystem(const QByteArray &json) {
+System *Protocol::jsonToSystem(const QByteArray &json) {
     auto doc = QJsonDocument::fromJson(json);
     // Parse
     if (doc.isNull())
@@ -317,7 +317,7 @@ QByteArray Protocol::getPassword(QByteArray &json) {
  * @param password Password
  * @return JSON file
  */
-QByteArray Protocol::getAuthenticationJson(QByteArray &username, QByteArray &password) {
+QByteArray Protocol::getAuthenticationJson(QByteArray username, QByteArray password) {
     QJsonObject object;
     object.insert("username", QString::fromUtf8(username));
     object.insert("password", QString::fromUtf8(password));
@@ -377,18 +377,18 @@ QByteArray Protocol::getErrorJson(QString &error) {
  * @param messageType Message type - auth/id/system/data
  * @return Converted message
  */
-QByteArray Protocol::jsonToMessage(MESSAGE messageType, const QByteArray &data) {
+QByteArray Protocol::createMessage(MESSAGE messageType, const QByteArray &data) {
     quint64 size = data.size();
     size += 9;
     QByteArray sizeArray;
-    sizeArray.append((char)(size >> 56));
-    sizeArray.append((char)(size >> 48));
-    sizeArray.append((char)(size >> 40));
-    sizeArray.append((char)(size >> 32));
-    sizeArray.append((char)(size >> 24));
-    sizeArray.append((char)(size >> 16));
-    sizeArray.append((char)(size >> 8));
-    sizeArray.append((char)(size));
+    sizeArray.append((char) (size >> 56));
+    sizeArray.append((char) (size >> 48));
+    sizeArray.append((char) (size >> 40));
+    sizeArray.append((char) (size >> 32));
+    sizeArray.append((char) (size >> 24));
+    sizeArray.append((char) (size >> 16));
+    sizeArray.append((char) (size >> 8));
+    sizeArray.append((char) (size));
     QByteArray messageTypeArray;
     messageTypeArray.append(static_cast<char>(messageType));
     QByteArray sendData = sizeArray + messageTypeArray + data;
@@ -400,15 +400,18 @@ QByteArray Protocol::jsonToMessage(MESSAGE messageType, const QByteArray &data) 
  * @param message Message
  * @return Message types
  */
-QList<MESSAGE> Protocol::getMessageType(const QByteArray &message) {
+QList<MESSAGE> Protocol::getMessageTypes(const QByteArray &message) {
     QList<MESSAGE> messageTypes;
     qint64 size = 0;
     auto ptr = message.begin();
     do {
-        ptr += sizeof(qint64);
-        auto messageType = (MESSAGE)QByteArray(ptr, 1).at(0);
+        size = ((qint64) *ptr << 56) + ((qint64) *(ptr + 1) << 48) + ((qint64) *(ptr + 2) << 40) +
+               ((qint64) *(ptr + 3) << 32) + ((qint64) *(ptr + 4) << 24) + ((qint64) *(ptr + 5) << 16) +
+               ((qint64) *(ptr + 6) << 8) + (qint64) *(ptr + 7);
+        ptr += S_INT64;
+        auto messageType = (MESSAGE) QByteArray(ptr, 1).at(0);
         messageTypes.append(messageType);
-        ptr += size - 8;
+        ptr += size - S_INT64;
 
     } while (ptr < message.end());
     return messageTypes;
@@ -419,18 +422,31 @@ QList<MESSAGE> Protocol::getMessageType(const QByteArray &message) {
  * @param message Message
  * @return Message data
  */
-QList<QByteArray> Protocol::messageToJson(const QByteArray &message) {
+QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
     QList<QByteArray> jsons;
     qint64 size = 0;
     auto ptr = message.begin();
     do {
-        size += ((qint64)(*ptr) << 56) + ((qint64)(*(ptr + 1)) << 48) + ((qint64)(*(ptr + 2)) << 40) + ((qint64)(*(ptr + 3)) << 32) + ((qint64)(*(ptr + 4)) << 24) + ((qint64)(*(ptr + 5)) << 16) + ((qint64)(*(ptr + 6)) << 8) + (qint64)(*(ptr + 7));
-        ptr += sizeof(qint64);
-        ptr += 1;
-        auto data = message.mid(ptr - message.begin(), size - 9);
+        size += ((qint64) (*ptr) << 56) + ((qint64) (*(ptr + 1)) << 48) + ((qint64) (*(ptr + 2)) << 40) +
+                ((qint64) (*(ptr + 3)) << 32) + ((qint64) (*(ptr + 4)) << 24) + ((qint64) (*(ptr + 5)) << 16) +
+                ((qint64) (*(ptr + 6)) << 8) + (qint64) (*(ptr + 7));
+        ptr += S_INT64;
+        ptr += S_CHAR;
+        auto data = message.mid(ptr - message.begin(), size - S_INT64 - S_CHAR);
         jsons.append(data);
-        ptr += size - 9;
+        ptr += size - S_INT64 - S_CHAR;
 
     } while (ptr < message.end());
     return jsons;
+}
+
+bool Protocol::getConfirmation(QByteArray &json) {
+    QJsonDocument document = QJsonDocument::fromJson(json);
+    if (document.isObject()) {
+        QJsonObject object = document.object();
+        if (object.contains("confirmation")) {
+            return object["confirmation"].toBool();
+        }
+    }
+    return false;
 }

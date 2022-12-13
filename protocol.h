@@ -11,9 +11,11 @@
 
 #include "components/system.h"
 
+#include "Constants.h"
+
 enum MESSAGE {
     UNKNOWN,
-    AUTH,
+    AUTHENTICATE,
     ID,
     SYSTEM,
     DATA,
@@ -45,7 +47,7 @@ public:
 
     static QByteArray getPassword(QByteArray &json);
 
-    static QByteArray getAuthenticationJson(QByteArray &username, QByteArray &password);
+    static QByteArray getAuthenticationJson(QByteArray username, QByteArray password);
 
     static int getClientId(QByteArray &json);
 
@@ -55,11 +57,13 @@ public:
 
     static QByteArray getErrorJson(QString &error);
 
-    static QByteArray jsonToMessage(MESSAGE messageType, const QByteArray &data);
+    static bool getConfirmation(QByteArray &json);
 
-    static QList<MESSAGE> getMessageType(const QByteArray &message);
+    static QByteArray createMessage(MESSAGE messageType, const QByteArray &data);
 
-    static QList<QByteArray> messageToJson(const QByteArray &message);
+    static QList<MESSAGE> getMessageTypes(const QByteArray &message);
+
+    static QList<QByteArray> getMessageJsons(const QByteArray &message);
 };
 
 
