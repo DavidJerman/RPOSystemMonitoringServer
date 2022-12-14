@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>SystemMonitoringServer: Protocol Class Reference</title>
+<title>System Monitoring Server: Protocol Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -25,8 +25,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">SystemMonitoringServer
+   <div id="projectname">System Monitoring Server<span id="projectnumber">&#160;2022.11.26</span>
    </div>
+   <div id="projectbrief">System Monitoring Server - a college project</div>
   </td>
  </tr>
  </tbody>
@@ -91,10 +92,14 @@ $(document).ready(function(){initNavTree('class_protocol.html',''); initResizabl
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_protocol-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">Protocol Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>The <a class="el" href="class_protocol.html" title="The Protocol class.">Protocol</a> class.  
+ <a href="class_protocol.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="protocol_8h_source.html">protocol.h</a>&gt;</code></p>
 <table class="memberdecls">
@@ -102,8 +107,33 @@ $(document).ready(function(){initNavTree('class_protocol.html',''); initResizabl
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5a5359f9566fc47d5758dd247e71668a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a5a5359f9566fc47d5758dd247e71668a">Protocol</a> ()</td></tr>
 <tr class="separator:a5a5359f9566fc47d5758dd247e71668a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a5b9794e0be57d9d41b4a82acee000e78"><td class="memItemLeft" align="right" valign="top">static QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a5b9794e0be57d9d41b4a82acee000e78">UTF8JsonFromFile</a> (QString fileName)</td></tr>
+<tr class="memdesc:a5b9794e0be57d9d41b4a82acee000e78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a byte array from a file.  <a href="class_protocol.html#a5b9794e0be57d9d41b4a82acee000e78">More...</a><br /></td></tr>
+<tr class="separator:a5b9794e0be57d9d41b4a82acee000e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fc396df4193af401d4ca3708d4c24fc"><td class="memItemLeft" align="right" valign="top">static QJsonDocument&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a6fc396df4193af401d4ca3708d4c24fc">UTF8ToJsonDocument</a> (const QByteArray &amp;data)</td></tr>
+<tr class="memdesc:a6fc396df4193af401d4ca3708d4c24fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a byte array to a JSON document.  <a href="class_protocol.html#a6fc396df4193af401d4ca3708d4c24fc">More...</a><br /></td></tr>
+<tr class="separator:a6fc396df4193af401d4ca3708d4c24fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e092969e30389b6f1672006a6569778"><td class="memItemLeft" align="right" valign="top">static QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a0e092969e30389b6f1672006a6569778">jsonDocumentToUTF8</a> (const QJsonDocument &amp;data)</td></tr>
+<tr class="memdesc:a0e092969e30389b6f1672006a6569778"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a JSON document to a byte array.  <a href="class_protocol.html#a0e092969e30389b6f1672006a6569778">More...</a><br /></td></tr>
+<tr class="separator:a0e092969e30389b6f1672006a6569778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c2758f345b470a5108ac8590c5adeb1"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_system.html">System</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1">jsonToSystem</a> (const QJsonDocument &amp;doc)</td></tr>
+<tr class="memdesc:a6c2758f345b470a5108ac8590c5adeb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts json document to system object.  <a href="class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1">More...</a><br /></td></tr>
+<tr class="separator:a6c2758f345b470a5108ac8590c5adeb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7045ea8251f789caa167c8b34fabf5a"><td class="memItemLeft" align="right" valign="top">static QJsonDocument&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_protocol.html#aa7045ea8251f789caa167c8b34fabf5a">systemToJson</a> (const <a class="el" href="class_system.html">System</a> *system)</td></tr>
+<tr class="memdesc:aa7045ea8251f789caa167c8b34fabf5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a system object to a JSON document.  <a href="class_protocol.html#aa7045ea8251f789caa167c8b34fabf5a">More...</a><br /></td></tr>
+<tr class="separator:aa7045ea8251f789caa167c8b34fabf5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >The <a class="el" href="class_protocol.html" title="The Protocol class.">Protocol</a> class. </p>
+<p >This class defines the protocol. The structure used for sending data is json. The protocol includes identifying the following messages:</p><ul>
+<li>authentication,</li>
+<li>add new system,</li>
+<li>add new data. </li>
+</ul>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5a5359f9566fc47d5758dd247e71668a" name="a5a5359f9566fc47d5758dd247e71668a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a5359f9566fc47d5758dd247e71668a">&#9670;&#160;</a></span>Protocol()</h2>
 
@@ -118,6 +148,182 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6c2758f345b470a5108ac8590c5adeb1" name="a6c2758f345b470a5108ac8590c5adeb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c2758f345b470a5108ac8590c5adeb1">&#9670;&#160;</a></span>jsonToSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_system.html">System</a> * Protocol::jsonToSystem </td>
+          <td>(</td>
+          <td class="paramtype">const QJsonDocument &amp;&#160;</td>
+          <td class="paramname"><em>doc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts json document to system object. </p>
+<p >Converts a JSON document to a system class that contains components. If the JSON document is invalid or contains invalid data, a nullptr is returned! </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">doc</td><td>JSON Document to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_system.html">System</a> class </dd></dl>
+
+</div>
+</div>
+<a id="a0e092969e30389b6f1672006a6569778" name="a0e092969e30389b6f1672006a6569778"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e092969e30389b6f1672006a6569778">&#9670;&#160;</a></span>jsonDocumentToUTF8()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QByteArray Protocol::jsonDocumentToUTF8 </td>
+          <td>(</td>
+          <td class="paramtype">const QJsonDocument &amp;&#160;</td>
+          <td class="paramname"><em>doc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a JSON document to a byte array. </p>
+<p >Converts a JSON document to a byte array. If invalid/empty JSON document is received an empty array is returned. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">doc</td><td>JSON Document to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Byte array </dd></dl>
+
+</div>
+</div>
+<a id="aa7045ea8251f789caa167c8b34fabf5a" name="aa7045ea8251f789caa167c8b34fabf5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7045ea8251f789caa167c8b34fabf5a">&#9670;&#160;</a></span>systemToJson()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QJsonDocument Protocol::systemToJson </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_system.html">System</a> *&#160;</td>
+          <td class="paramname"><em>system</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a system object to a JSON document. </p>
+<p >Converts a system object to a JSON document. The object should contain at least some components. If the system class is empty, returns an empty document. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">system</td><td><a class="el" href="class_system.html">System</a> to convert </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JSON document </dd></dl>
+
+</div>
+</div>
+<a id="a5b9794e0be57d9d41b4a82acee000e78" name="a5b9794e0be57d9d41b4a82acee000e78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b9794e0be57d9d41b4a82acee000e78">&#9670;&#160;</a></span>UTF8JsonFromFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QByteArray Protocol::UTF8JsonFromFile </td>
+          <td>(</td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Loads a byte array from a file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>File to load from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Data </dd></dl>
+
+</div>
+</div>
+<a id="a6fc396df4193af401d4ca3708d4c24fc" name="a6fc396df4193af401d4ca3708d4c24fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fc396df4193af401d4ca3708d4c24fc">&#9670;&#160;</a></span>UTF8ToJsonDocument()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QJsonDocument Protocol::UTF8ToJsonDocument </td>
+          <td>(</td>
+          <td class="paramtype">const QByteArray &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts a byte array to a JSON document. </p>
+<p >Converts a byte array to a JSON document. If invalid empty/invalid data is received, an empty JSON document is returned. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Byte array </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JSON document </dd></dl>
 
 </div>
 </div>

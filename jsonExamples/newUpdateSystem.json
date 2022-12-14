@@ -1,0 +1,54 @@
+{
+  "cpu": {
+    "cpu_0": {
+      "id": 1,
+      "name": "AMD Ryzen 5 3600",
+      "max_frequency": 4.20,
+      "cores": 6,
+      "fk_client": 3
+    }
+  },
+  "disk": {
+    "disk_0": {
+      "id": 1,
+      "name": "Seagate Expansion",
+      "capacity": 1000.0,
+      "type": "hard drive",
+      "fk_client": 1
+    },
+    "disk_1": {
+      "id": 1,
+      "name": "Seagate Expansion",
+      "capacity": 1000.0,
+      "type": "hard drive",
+      "fk_client": 1
+    }
+  },
+  "gpu": {
+    "gpu_0": {
+      "id": 1,
+      "name": "NVIDIA GeForce RTX 3060",
+      "max_frequency": 1575.00,
+      "vram": 12.00,
+      "fk_client": 2
+    }
+  },
+  "network": {
+    "network_0": {
+      "id": 1,
+      "name": "Intel Ethernet",
+      "type": "LAN",
+      "fk_client": 4
+    }
+  },
+  "ram": {
+    "ram_0": {
+      "id": 1,
+      "name": "Ripjaws 16GB 3200 MHz",
+      "capacity": 16.00,
+      "type": "DDR4",
+      "frequency": 3200.00,
+      "fk_client": 4
+    }
+  }
+}

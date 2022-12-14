@@ -10,24 +10,23 @@
 #include <QException>
 
 
-class Config
-{
+class Config {
 public:
     Config();
 
-    void loadFromFile(QString fileName);
+    void loadFromFile(const QString& fileName);
 
     void addProperty(QString property, QString value);
 
-    QString getValue(QString property);
+    QString getProperty(QString property);
 
-    const QList<QString> getProperties();
+    QList<QString> getProperties();
 
     bool isEmpty() noexcept;
 
-    bool hasProperty(QString property);
+    bool hasProperty(const QString& property);
 
-    bool hasValue(QString value);
+    bool hasValue(const QString& value);
 
     bool isLoaded();
 
@@ -50,27 +49,23 @@ private:
 
 
 // NEEDS TO BE TESTED WITH QT CODE!
-class PropertyNotFoundException : public QException
-{
+class PropertyNotFoundException : public QException {
 public:
     PropertyNotFoundException(const QString &_message = "") noexcept
-        : _message(_message) {}
+            : _message(_message) {}
 
 
-    void raise() const override
-    {
+    void raise() const override {
         throw *this;
     }
 
 
-    PropertyNotFoundException *clone() const override
-    {
+    PropertyNotFoundException *clone() const override {
         return new PropertyNotFoundException(*this);
     }
 
 
-    QString message() const noexcept
-    {
+    QString message() const noexcept {
         return _message;
     }
 
@@ -79,34 +74,29 @@ private:
 };
 
 
-class FileException : public QException
-{
+class FileException : public QException {
 public:
     FileException(const QString &_message = "") noexcept
-        : _message(_message) {}
+            : _message(_message) {}
 
 
-    void raise() const override
-    {
+    void raise() const override {
         throw *this;
     }
 
 
-    FileException *clone() const override
-    {
+    FileException *clone() const override {
         return new FileException(*this);
     }
 
 
-    QString message() const noexcept
-    {
+    QString message() const noexcept {
         return _message;
     }
 
 private:
     QString _message;
 };
-
 
 
 #endif // CONFIG_H

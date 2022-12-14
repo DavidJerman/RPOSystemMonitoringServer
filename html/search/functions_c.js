@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7eserver_0',['~Server',['../class_server.html#a4b3aa2579cb1c8cd1d069582c14d0fa6',1,'Server']]]
+  ['network_0',['Network',['../class_network.html#aa33986359e96f9fce908117eded4784a',1,'Network']]]
 ];

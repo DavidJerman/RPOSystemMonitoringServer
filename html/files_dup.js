@@ -1,5 +1,6 @@
 var files_dup =
 [
+    [ "components", "dir_409f97388efe006bc3438b95e9edef48.html", "dir_409f97388efe006bc3438b95e9edef48" ],
     [ "auth.cpp", "auth_8cpp.html", null ],
     [ "auth.h", "auth_8h.html", "auth_8h" ],
     [ "config.cpp", "config_8cpp.html", null ],

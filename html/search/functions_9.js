@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['propertynotfoundexception_0',['PropertyNotFoundException',['../class_property_not_found_exception.html#ad3203dc6206c6bb13f8ceb22895fa257',1,'PropertyNotFoundException']]],
-  ['protocol_1',['Protocol',['../class_protocol.html#a5a5359f9566fc47d5758dd247e71668a',1,'Protocol']]]
+  ['jsondocumenttosystem_0',['jsonDocumentToSystem',['../class_protocol.html#a6c2758f345b470a5108ac8590c5adeb1',1,'Protocol']]],
+  ['jsondocumenttoutf8_1',['jsonDocumentToUTF8',['../class_protocol.html#a0e092969e30389b6f1672006a6569778',1,'Protocol']]]
 ];

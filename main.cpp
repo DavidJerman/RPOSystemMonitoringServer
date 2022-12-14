@@ -1,16 +1,23 @@
 #include <QCoreApplication>
+#include <QThread>
+#include <unistd.h>
 
 #include "server.h"
-
-// Temp
-//#include "config.h"
-#include <iostream>
+#include "protocol.h"
+#include "tests/run_tests.h"
 
 int main(int argc, char *argv[])
 {
-     QCoreApplication a(argc, argv);
+    QCoreApplication a(argc, argv);
 
-     Server server;
+    Server server;
 
-     return a.exec();
+    // Run tests in separate thread
+    auto* thread = new QThread();
+    QObject::connect(thread, &QThread::started, []() {
+        assert(run_tests() == true);
+    });
+    thread->start();
+
+    return QCoreApplication::exec();
 }
