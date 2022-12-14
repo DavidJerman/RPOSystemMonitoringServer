@@ -9,6 +9,8 @@
 #include <QSslSocket>
 #include <QMap>
 
+#include <QSqlDatabase>
+
 #include "config.h"
 #include "Session.h"
 #include "protocol.h"
@@ -32,7 +34,14 @@ public slots:
 
 
 private:
-    int authenticate(QTcpSocket *client, const QByteArray& username, const QByteArray& password);
+    int authenticate(const QByteArray& username, const QByteArray& password);
+    int identify(int userID, int clientID);
+    bool addSystem(int userID, int clientID, System* system);
+
+    void parseMessage(QTcpSocket* client, const QByteArray& msg);
+
+    Config config;
+    QSqlDatabase db;
 
     QTcpServer* server;
 

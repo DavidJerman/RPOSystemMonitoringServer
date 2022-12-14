@@ -9,6 +9,66 @@
  */
 Server::Server() {
     // Load config here
+    db = QSqlDatabase();
+    config = Config();
+    try {
+        config.loadFromFile("C:/QtBuilds/config.cfg");
+    } catch (PropertyNotFoundException &e) {
+        qDebug() << "Error loading config: " << e.what();
+        throw e;
+    } catch (FileException &e) {
+        qDebug() << "Error loading config: " << e.what();
+        throw e;
+    }
+
+    // Check if properties exist
+    if (config.isEmpty()) {
+        qDebug() << "Config is empty!";
+        throw PropertyNotFoundException("Config is empty!");
+    }
+    if (!config.hasProperty("DatabaseUsername")) {
+        qDebug() << "DatabaseUsername not found!";
+        throw PropertyNotFoundException("DatabaseUsername not found!");
+    }
+    if (!config.hasProperty("DatabasePassword")) {
+        qDebug() << "DatabasePassword not found!";
+        throw PropertyNotFoundException("DatabasePassword not found!");
+    }
+    if (!config.hasProperty("DatabaseAddress")) {
+        qDebug() << "DatabaseAddress not found!";
+        throw PropertyNotFoundException("DatabaseAddress not found!");
+    }
+    if (!config.hasProperty("DatabasePort")) {
+        qDebug() << "DatabasePort not found!";
+        throw PropertyNotFoundException("DatabasePort not found!");
+    }
+    if (!config.hasProperty("DatabaseDB")) {
+        qDebug() << "DatabaseDB not found!";
+        throw PropertyNotFoundException("DatabaseDB not found!");
+    }
+    if (!config.hasProperty("Connector")) {
+        qDebug() << "Connector not found!";
+        throw PropertyNotFoundException("Connector not found!");
+    }
+    if (!config.hasProperty("ServerPort")) {
+        qDebug() << "ServerPort not found!";
+        throw PropertyNotFoundException("ServerPort not found!");
+    }
+
+    // TODO: Vzpostavi povezavo z bazo
+    QString dbUsername = config.getProperty("DatabaseUsername");
+    QString dbPassword = config.getProperty("DatabasePassword");
+    QString dbAddress = config.getProperty("DatabaseAddress");
+    QString dbPort = config.getProperty("DatabasePort");
+    QString dbDB = config.getProperty("DatabaseDB");
+    QString dbConnecter = config.getProperty("Connector");
+
+    db = QSqlDatabase::addDatabase(dbConnecter);
+    db.setPort(dbPort.toInt());
+    db.setHostName(dbAddress);
+    db.setDatabaseName(dbDB);
+    db.setUserName(dbUsername);
+    db.setPassword(dbPassword);
 
     server = new QTcpServer(this);
 
@@ -102,8 +162,132 @@ void Server::onDisconnected() {
     socket->deleteLater();
 }
 
-int Server::authenticate(QTcpSocket *client, const QByteArray& username, const QByteArray& password) {
-    // Ce najdes uporabnika v bazi vrni njegov ID, ce ne vrni 0
+void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
+    // TODO: Remove for production
+    // qDebug() << "User " << client->peerAddress().toString() << " sent: " << msg;
+
+    // 1: Authentication
+    //    a) Accept connection
+    //    b) Reject connection
+    // 2: Identification
+    //    a) Send new identification
+    //    b) Send old identification
+    // 3: New system
+    //    a) Add new system
+    //    b) Remove system and replace with new one
+    // 4: Data
+    //    a) Accept data and check if needed to be saved
+
+    // TODO: Uncomment for production
+//    if (client == nullptr || client->state() != QAbstractSocket::ConnectedState) {
+//        qDebug() << "Client is null or not connected!";
+//        return;
+//    }
+
+    auto messageTypes = Protocol::getMessageTypes(msg);
+    auto messageJsons = Protocol::getMessageJsons(msg);
+    if (messageTypes.size() != messageJsons.size()) {
+        qDebug() << "Error: Message types and msg jsons are not the same size!";
+        return;
+    }
+    if (messageTypes.empty()) {
+        qDebug() << "Error: Message types and msg jsons are empty!";
+        return;
+    }
+
+    for (int i = 0; i < messageTypes.size(); i++) {
+        auto messageType = messageTypes.at(i);
+        auto messageJson = messageJsons.at(i);
+
+        /**
+         * Checks for authentication
+         */
+        auto *session = clients.value(client);
+        if (!session->isAuthenticated()) {
+            bool confirm = false;
+            if (messageType == MESSAGE::AUTHENTICATE) {
+                auto username = Protocol::getUsername(messageJson);
+                auto password = Protocol::getPassword(messageJson);
+                auto res = authenticate(username, password);
+                if (res != 0) {
+                    confirm = true;
+                    session->setUserId(res);
+                }
+            }
+            auto json = Protocol::getConfirmationJson(confirm);
+            auto message = Protocol::createMessage(MESSAGE::CONFIRM, json);
+            // qDebug() << "Sending confirmation: " << message;
+            client->write(message);
+            if (!confirm) {
+                client->close();
+                return;
+            }
+            continue;
+        }
+        if (!session->isIdentified() && messageType == MESSAGE::IDENTIFY && session->isAuthenticated()) {
+            bool confirm = false;
+            auto clientId = Protocol::getClientId(messageJson);
+            if (clientId == 0) {
+                client->write(Protocol::createMessage(MESSAGE::CONFIRM, Protocol::getConfirmationJson(false)));
+                return;
+            }
+            auto userId = session->getUserId();
+            auto res = identify(userId, clientId);
+            if (res != 0) {
+                confirm = true;
+                session->setClientId(clientId);
+            }
+
+            auto json = Protocol::getConfirmationJson(confirm);
+            auto message = Protocol::createMessage(MESSAGE::CONFIRM, json);
+            client->write(message);
+            if (!confirm) {
+                client->close();
+                return;
+            }
+            continue;
+        }
+        if (session->isIdentified() && messageType == MESSAGE::SYSTEM && session->isAuthenticated() &&
+            !session->isSystemAdded()) {
+            auto system = Protocol::jsonToSystem(messageJson);
+            if (system != nullptr) {
+                client->write(Protocol::createMessage(MESSAGE::CONFIRM, Protocol::getConfirmationJson(false)));
+                return;
+            }
+            auto clientId = session->getClientId();
+            auto userId = session->getUserId();
+            auto res = addSystem(userId, clientId, system);
+            auto json = Protocol::getConfirmationJson(res);
+            auto message = Protocol::createMessage(MESSAGE::CONFIRM, json);
+            session->setSystemAdded(res);
+            session->addSystem(system);
+            client->write(message);
+            continue;
+        }
+        if (session->isAuthenticated() && session->isIdentified() && session->isSystemAdded() &&
+            messageType == MESSAGE::DATA) {
+            auto data = Protocol::getMessageJsons(messageJson);
+            auto clientId = session->getClientId();
+            auto userId = session->getUserId();
+//            auto res = addData(userId, clientId, data);
+//            auto json = Protocol::getConfirmationJson(res);
+//            auto message = Protocol::createMessage(MESSAGE::CONFIRM, json);
+//            client->write(message);
+            continue;
+        }
+    }
+}
+
+int Server::authenticate(const QByteArray &username, const QByteArray &password) {
+    // TODO: Remove - for testing purposes only
+    if (username == "test" && password == "test")
+        return -2;
+
+    // Ce najdes uporabnika v bazi vrni njegov IDENTIFY, ce ne vrni 0
+    // -2 je samo za namene testiranja
+
+    // TODO: Preveri v PB uporabnika in geslo, ce se ne ujemata/ni v PB vrni 0, sicer IDENTIFY uporabnika (userID)
+
     return 0;
 }
 
