@@ -16,7 +16,7 @@
 enum MESSAGE {
     UNKNOWN,
     AUTHENTICATE,
-    ID,
+    IDENTIFY,
     SYSTEM,
     DATA,
     CONFIRM
@@ -51,7 +51,7 @@ public:
 
     static int getClientId(QByteArray &json);
 
-    static QByteArray getClientIdentificationJson(int &clientID);
+    static QByteArray getIdentificationJson(int &clientID);
 
     static QByteArray getConfirmationJson(bool confirmation);
 

@@ -325,10 +325,10 @@ QByteArray Protocol::getAuthenticationJson(QByteArray username, QByteArray passw
 }
 
 /**
- * Reads a client ID from a specified JSON file.
- * If a client ID is not found, 0 is returned.
+ * Reads a client IDENTIFY from a specified JSON file.
+ * If a client IDENTIFY is not found, 0 is returned.
  * @param json JSON file to read from
- * @return Client ID
+ * @return Client IDENTIFY
  */
 int Protocol::getClientId(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
@@ -342,11 +342,11 @@ int Protocol::getClientId(QByteArray &json) {
 }
 
 /**
- * Creates an identification JSON from the given client ID.
- * @param clientID Client ID
+ * Creates an identification JSON from the given client IDENTIFY.
+ * @param clientID Client IDENTIFY
  * @return Client Identification JSON
  */
-QByteArray Protocol::getClientIdentificationJson(int &clientID) {
+QByteArray Protocol::getIdentificationJson(int &clientID) {
     QJsonObject object;
     object.insert("id", clientID);
     return QJsonDocument(object).toJson();

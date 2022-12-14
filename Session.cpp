@@ -12,7 +12,7 @@ Session::Session() {
 
 Session::~Session() = default;
 
-bool Session::isAuthorized() const {
+bool Session::isIdentified() const {
     return clientID != 0;
 }
 

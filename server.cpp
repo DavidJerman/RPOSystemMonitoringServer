@@ -1,6 +1,9 @@
 #include "server.h"
 #include "config.h"
 
+#define AUTHENTICATION_DISABLED 1
+#define IDENTIFICATION_DISABLED 1
+
 /**
  * @brief Constructs the server and loads the config
  */
@@ -106,9 +109,13 @@ int Server::authenticate(QTcpSocket *client, const QByteArray& username, const Q
 
 
 int Server::identify(int userID, int clientID) {
+    // TODO: Remove - for testing purposes only
+    if (userID == -2 || clientID == -2)
+        return -2;
+
     // TODO: Preveri, ce za tega uporbnika ze obstaja client ID, ce ne ga dodaj v PB in vrni nov ID, sicer vrni obstojeci ID
 
-    return 1;
+    return 0;
 }
 
 bool Server::addSystem(int userID, int clientID, System *system) {

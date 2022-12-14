@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include "protocol.h"
 #include "Utils.h"
+#include "Constants.h"
 
 using namespace Utils;
 
@@ -14,7 +15,7 @@ namespace Test_0 {
         // Connect QTcpSocket to server
         auto *socket = new QTcpSocket();
         socket->connectToHost(address, port);
-        if (!socket->waitForConnected(3000)) {
+        if (!socket->waitForConnected(WAIT_FOR_READY_READ)) {
             println("Failed to connect to server - timed out, test failed!", Color::RED);
             return 1;
         }
@@ -28,7 +29,7 @@ namespace Test_0 {
         }
         // Receive data
         if (socket->isValid()) {
-            socket->waitForReadyRead(3000);
+            socket->waitForReadyRead(WAIT_FOR_READY_READ);
             auto data = socket->readAll();
             println("Received data!", Color::BLUE);
             auto messageType = Protocol::getMessageTypes(data)[0];
@@ -53,7 +54,6 @@ namespace Test_0 {
             println("Socket is still valid, test failed!", Color::RED);
             return 1;
         }
-        println("Test passed!", Color::BLUE);
         return 0;
     }
 }

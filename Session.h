@@ -14,7 +14,7 @@ public:
 
     virtual ~Session();
 
-    [[nodiscard]] bool isAuthorized() const;
+    [[nodiscard]] bool isIdentified() const;
 
     [[nodiscard]] bool isAuthenticated() const;
 
