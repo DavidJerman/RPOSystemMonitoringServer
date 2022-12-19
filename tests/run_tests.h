@@ -16,7 +16,6 @@ int run_tests() {
 
     std::vector<bool> results;
 
-    sleep(1);
     println("================================================================", Color::WHITE);
     println("Running tests...                                               |", Color::WHITE);\
 
@@ -74,8 +73,6 @@ int run_tests() {
         }
     }
     println("================================================================", Color::WHITE);
-
-    sleep(1);
 
     return pass;
 }

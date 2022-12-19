@@ -7,8 +7,15 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <powrprof.h>
+extern "C" {
+    #include <Powrprof.h>
+}
+#pragma comment(lib, "Powrprof.lib")
 #endif // _WIN32
+
+#ifdef __linux__
+#include <cpuid.h>
+#endif // __linux__
 
 
 #include "components/cpu.h"
@@ -18,14 +25,32 @@
 #include "components/disk.h"
 #include "components/system.h"
 
-#include <cpuid.h>
 #include <iostream>
 #include <string>
 #include <regex>
 #include <fstream>
 
+#ifdef _WIN32
+typedef struct PROCESSOR_POWER_INFORMATION {
+    ULONG Number;
+    ULONG MaxMhz;
+    ULONG CurrentMhz;
+    ULONG MhzLimit;
+    ULONG MaxIdleState;
+    ULONG CurrentIdleState;
+} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+#endif // _WIN32
+
 
 namespace CPU {
+    // Prototypes
+    static QString getVendor();
+    static QString getName();
+    static double getMaxFrequency();
+    static double getFrequency();
+    static unsigned long getLogicalCores();
+    static bool hasHTT();
+
     /**
      * @brief Returns the CPU vendor
      * @return CPU vendor
@@ -34,7 +59,12 @@ namespace CPU {
         // Define data container
         int data[4];
         // Obtain the data
+#ifdef _WIN32
+        __cpuid(data, 0);
+#endif // _WIN32
+#ifdef __linux__
         __cpuid(0, data[0], data[1], data[2], data[3]);
+#endif // __linux__
         // Create the word
         char vendor[13];
         // Copy the data
@@ -56,12 +86,22 @@ namespace CPU {
         int data[4];
         char name[48];
         // Get the data register by register
+#ifdef _WIN32
+        __cpuid(data, (int) 0x80000002);
+        memcpy(name, data, 16);
+        __cpuid(data, (int) 0x80000003);
+        memcpy(name + 16, data, 16);
+        __cpuid(data, (int) 0x80000004);
+        memcpy(name + 32, data, 16);
+#endif // _WIN32
+#ifdef __linux__
         __cpuid(0x80000002, data[0], data[1], data[2], data[3]);
         memcpy(name, data, 16);
         __cpuid(0x80000003, data[0], data[1], data[2], data[3]);
         memcpy(name + 16, data, 16);
         __cpuid(0x80000004, data[0], data[1], data[2], data[3]);
         memcpy(name + 32, data, 16);
+#endif // __linux__
         // Return
         return {name};
     }
@@ -101,23 +141,107 @@ namespace CPU {
         return 0;
 #endif // __linux__
 #ifdef _WIN32
+        // Get cpu cores
+        auto cores = getLogicalCores();
         // Get the structure
         POWER_INFORMATION_LEVEL powerInformationLevel = ProcessorInformation;
-        PVOID inputBuffer;
+        PVOID inputBuffer = new PVOID();
         ULONG inputBufferLength = 0;
-        PVOID outputBuffer;
-        ULONG outputBufferLength = 0;
+        PVOID outputBuffer = new PVOID();
+        ULONG outputBufferLength = cores * sizeof(PROCESSOR_POWER_INFORMATION);
         CallNtPowerInformation(powerInformationLevel, inputBuffer, inputBufferLength, outputBuffer, outputBufferLength);
+        double sum = 0;
+        for (unsigned int i = 0; i < cores; i++) {
+            auto processorPowerInformation = (PROCESSOR_POWER_INFORMATION *) outputBuffer;
+            sum += processorPowerInformation[i].MaxMhz;
+        }
+        return sum / cores;
 #endif // _WIN32
         return 0.0;
     }
 
-    static int getCores() {
-
+    static unsigned long getPhysicalCores() {
+#ifdef _WIN32
+        SYSTEM_INFO sysInfo;
+        GetSystemInfo(&sysInfo);
+        // TODO: Improve this, this is just a temporary fix - will not work with CPUs that have a combination of HTT and SMT cores
+        return sysInfo.dwNumberOfProcessors / (hasHTT() ? 2 : 1);
+#endif // _WIN32
+#ifdef __linux__
+        // Open the procinfo file
+        std::ifstream file("/proc/cpuinfo");
+        // Check if file open
+        if (file.is_open()) {
+            // Read the file
+            std::string line;
+            std::regex regex(R"(cpu cores\s*:\s*(\d+))");
+            std::smatch match;
+            while (std::getline(file, line)) {
+                if (std::regex_search(line, match, regex)) {
+                    // Return the frequency
+                    return std::stoul(match[1]);
+                }
+            }
+        }
+#endif // __linux__
+        return 1;
     }
 
-    static int getThreads() {
+    /**
+     * @brief Returns the number of logical cores
+     * @return Number of logical cores
+     */
+    static unsigned long getLogicalCores() {
+        // TODO: Linux implementation
+#ifdef _WIN32
+        // Get number of cores
+        try {
+            auto systemInfo = new SYSTEM_INFO();
+            GetSystemInfo(systemInfo);
+            return (int)systemInfo->dwNumberOfProcessors;
+        } catch (std::exception& e) {
+            std::cerr << e.what() << std::endl;
+        }
+#endif // _WIN32
+#ifdef __linux__
+        // Open the procinfo file
+        std::ifstream file("/proc/cpuinfo");
+        // Check if file open
+        if (file.is_open()) {
+            // Read the file
+            std::string line;
+            std::regex regex(R"(processor\s*:\s*(\d+))");
+            std::smatch match;
+            unsigned long max = 0;
+            while (std::getline(file, line)) {
+                if (std::regex_search(line, match, regex)) {
+                    // Return the frequency
+                    auto value = std::stoul(match[1]);
+                    if (value > max) {
+                        max = value;
+                    }
+                }
+            }
+            return max + 1;
+        }
+#endif // __linux__
+        return 1;
+    }
 
+
+    /**
+     * @brief Does the cpu have hyper-threading technology?
+     * @return True if the cpu has hyper-threading technology
+     */
+    static bool hasHTT() {
+        int data[4];
+#ifdef _WIN32
+        __cpuid(data, 1);
+#endif // _WIN32
+#ifdef __linux__
+        __cpuid(1, data[0], data[1], data[2], data[3]);
+#endif // __linux__
+        return data[3] & (1 << 28);
     }
 
     /**
@@ -151,7 +275,22 @@ namespace CPU {
         return sum / c;
 #endif // __linux__
 #ifdef _WIN32
-
+        // TODO: Find a better solution - this is not really what I want
+        // Get cpu cores
+        auto cores = getLogicalCores();
+        // Get the structure
+        POWER_INFORMATION_LEVEL powerInformationLevel = ProcessorInformation;
+        PVOID inputBuffer = new PVOID();
+        ULONG inputBufferLength = 0;
+        PVOID outputBuffer = new PVOID();
+        ULONG outputBufferLength = cores * sizeof(PROCESSOR_POWER_INFORMATION);
+        CallNtPowerInformation(powerInformationLevel, inputBuffer, inputBufferLength, outputBuffer, outputBufferLength);
+        double sum = 0;
+        for (unsigned int i = 0; i < cores; i++) {
+            auto processorPowerInformation = (PROCESSOR_POWER_INFORMATION *) outputBuffer;
+            sum += processorPowerInformation[i].CurrentMhz;
+        }
+        return sum / cores;
 #endif // _WIN32
         return 0.0;
     }
