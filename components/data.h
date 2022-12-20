@@ -6,15 +6,31 @@
 #define SYSTEMMONITORINGSERVER_DATA_H
 
 #ifdef _WIN32
+
 #include <windows.h>
+
 extern "C" {
-    #include <Powrprof.h>
+#include <Powrprof.h>
 }
 #pragma comment(lib, "Powrprof.lib")
+
+#include <windef.h>
+#include <Pdh.h>
+
+#pragma comment(lib, "Pdh.lib")
+
+#include <iostream>
+
 #endif // _WIN32
 
 #ifdef __linux__
 #include <cpuid.h>
+#include <iostream>
+#include <string>
+#include <regex>
+#include <fstream>
+#include <vector>
+#include <unistd.h>
 #endif // __linux__
 
 
@@ -25,10 +41,6 @@ extern "C" {
 #include "components/disk.h"
 #include "components/system.h"
 
-#include <iostream>
-#include <string>
-#include <regex>
-#include <fstream>
 
 #ifdef _WIN32
 typedef struct PROCESSOR_POWER_INFORMATION {
@@ -39,17 +51,37 @@ typedef struct PROCESSOR_POWER_INFORMATION {
     ULONG MaxIdleState;
     ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+
+struct cpu_counter {
+    PDH_HQUERY query;
+    PDH_HCOUNTER counter;
+};
 #endif // _WIN32
 
 
 namespace CPU {
     // Prototypes
     static QString getVendor();
+
     static QString getName();
+
     static double getMaxFrequency();
+
     static double getFrequency();
+
     static unsigned long getLogicalCores();
+
     static bool hasHTT();
+
+#ifdef _WIN32
+
+    int cpu_counter_init(struct cpu_counter *pcc);
+
+    int cpu_counter_get(struct cpu_counter *pcc);
+
+    void cpu_counter_close(struct cpu_counter *pcc);
+
+#endif // _WIN32
 
     /**
      * @brief Returns the CPU vendor
@@ -162,10 +194,11 @@ namespace CPU {
 
     static unsigned long getPhysicalCores() {
 #ifdef _WIN32
-        SYSTEM_INFO sysInfo;
-        GetSystemInfo(&sysInfo);
+        auto sysInfo = new SYSTEM_INFO();
+        GetSystemInfo(sysInfo);
         // TODO: Improve this, this is just a temporary fix - will not work with CPUs that have a combination of HTT and SMT cores
-        return sysInfo.dwNumberOfProcessors / (hasHTT() ? 2 : 1);
+        return sysInfo->dwNumberOfProcessors / (hasHTT() ? 2 : 1);
+        delete sysInfo;
 #endif // _WIN32
 #ifdef __linux__
         // Open the procinfo file
@@ -189,18 +222,17 @@ namespace CPU {
 
     /**
      * @brief Returns the number of logical cores
-     * @return Number of logical cores
+     * @return Number of logical cores, if error returns -1
      */
     static unsigned long getLogicalCores() {
-        // TODO: Linux implementation
 #ifdef _WIN32
         // Get number of cores
         try {
             auto systemInfo = new SYSTEM_INFO();
             GetSystemInfo(systemInfo);
-            return (int)systemInfo->dwNumberOfProcessors;
-        } catch (std::exception& e) {
-            std::cerr << e.what() << std::endl;
+            return (int) systemInfo->dwNumberOfProcessors;
+        } catch (std::exception &e) {
+            return -1;
         }
 #endif // _WIN32
 #ifdef __linux__
@@ -290,10 +322,135 @@ namespace CPU {
             auto processorPowerInformation = (PROCESSOR_POWER_INFORMATION *) outputBuffer;
             sum += processorPowerInformation[i].CurrentMhz;
         }
+
         return sum / cores;
 #endif // _WIN32
         return 0.0;
     }
+
+    static double getUtilization() {
+#ifdef __linux__
+        // Data container
+        std::vector<double> data;
+        // Open the file
+        std::ifstream file("/proc/stat");
+        // Check if open
+        if (!file.is_open()) {
+            return 0;
+        }
+        // Read the file
+        std::string line;
+        std::regex regex(R"(cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+))");
+        std::smatch match;
+        while (std::getline(file, line)) {
+            if (std::regex_search(line, match, regex)) {
+                // Get the values
+                auto user = std::stoul(match[1]);
+                auto nice = std::stoul(match[2]);
+                auto system = std::stoul(match[3]);
+                auto idle = std::stoul(match[4]);
+                auto iowait = std::stoul(match[5]);
+                auto irq = std::stoul(match[6]);
+                auto softirq = std::stoul(match[7]);
+                auto steal = std::stoul(match[8]);
+                auto guest = std::stoul(match[9]);
+                auto guestNice = std::stoul(match[10]);
+                // Calculate the total
+                auto total = user + nice + system + idle + iowait + irq + softirq + steal + guest + guestNice;
+                auto work = user + nice + system + irq + softirq + steal + guest + guestNice;
+                data.push_back(total);
+                data.push_back(work);
+            }
+        }
+        file.close();
+        sleep(1);
+        file.open("/proc/stat");
+        // Check if open
+        if (!file.is_open()) {
+            return 0;
+        }
+        // Read the file
+        regex = std::regex(R"(cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+))");
+        while (std::getline(file, line)) {
+            if (std::regex_search(line, match, regex)) {
+                // Get the values
+                auto user = std::stoul(match[1]);
+                auto nice = std::stoul(match[2]);
+                auto system = std::stoul(match[3]);
+                auto idle = std::stoul(match[4]);
+                auto iowait = std::stoul(match[5]);
+                auto irq = std::stoul(match[6]);
+                auto softirq = std::stoul(match[7]);
+                auto steal = std::stoul(match[8]);
+                auto guest = std::stoul(match[9]);
+                auto guestNice = std::stoul(match[10]);
+                // Calculate the total
+                auto total = user + nice + system + idle + iowait + irq + softirq + steal + guest + guestNice;
+                auto work = user + nice + system + irq + softirq + steal + guest + guestNice;
+                data.push_back(total);
+                data.push_back(work);
+            }
+        }
+        file.close();
+        // Calculate the utilization
+        auto work = data[3] - data[1];
+        auto total = data[2] - data[0];
+        return work / total * 100;
+#endif // __linux__
+#ifdef _WIN32
+        // https://www.appsloveworld.com/cplus/100/393/c-find-current-cpu-usage-in-hertz-windows
+        try {
+            cpu_counter counter{};
+            cpu_counter_init(&counter);
+            Sleep(1000);
+            auto res = cpu_counter_get(&counter);
+            cpu_counter_close(&counter);
+            return res;
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+            return 0;
+        } catch (...) {
+            std::cout << "Unknown exception" << std::endl;
+            return 0;
+        }
+
+#endif // _WIN32
+        return 0.0;
+    }
+
+#ifdef _WIN32
+    // https://www.appsloveworld.com/cplus/100/393/c-find-current-cpu-usage-in-hertz-windows
+    /* Initialize query & counter */
+    int cpu_counter_init(struct cpu_counter *pcc) {
+        if (PdhOpenQueryA(nullptr, 0, &pcc->query) != ERROR_SUCCESS)
+            return -1;
+        if (PdhAddEnglishCounterA(pcc->query, "\\Processor(_Total)\\% Processor Time", 0, &pcc->counter) !=
+            ERROR_SUCCESS || PdhCollectQueryData(pcc->query) != ERROR_SUCCESS) {
+            PdhCloseQuery(pcc->query);
+            return -2;
+        }
+        return 0;
+    }
+
+/* Fetch data from query and evaluate current counter value */
+    int cpu_counter_get(struct cpu_counter *pcc) {
+        PDH_FMT_COUNTERVALUE counter_val;
+        if (PdhCollectQueryData(pcc->query) != ERROR_SUCCESS ||
+            PdhGetFormattedCounterValue(pcc->counter, PDH_FMT_LONG, nullptr, &counter_val) != ERROR_SUCCESS)
+            return -1;
+        return counter_val.longValue;
+    }
+
+/* Close all counters of query and query itself at the end */
+    void cpu_counter_close(struct cpu_counter *pcc) {
+        if (pcc->query != nullptr) {
+            PdhCloseQuery(pcc->query);
+            pcc->query = nullptr;
+        }
+    }
+
+#endif // _WIN32
 }
+
 
 #endif //SYSTEMMONITORINGSERVER_DATA_H
