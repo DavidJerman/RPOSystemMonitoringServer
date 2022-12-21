@@ -61,17 +61,21 @@ struct cpu_counter {
 
 namespace CPU {
     // Prototypes
-    static QString getVendor();
+    QString getVendor();
 
-    static QString getName();
+    QString getName();
 
-    static double getMaxFrequency();
+    double getMaxFrequency();
 
-    static double getFrequency();
+    double getFrequency();
 
-    static unsigned long getLogicalCores();
+    unsigned long getLogicalCores();
 
-    static bool hasHTT();
+    bool hasHTT();
+
+    double getUtilization();
+
+    double getTemperature();
 
 #ifdef _WIN32
 
@@ -87,7 +91,7 @@ namespace CPU {
      * @brief Returns the CPU vendor
      * @return CPU vendor
      */
-    static QString getVendor() {
+    QString getVendor() {
         // Define data container
         int data[4];
         // Obtain the data
@@ -113,7 +117,7 @@ namespace CPU {
      * @brief Returns the CPU name
      * @return CPU name
      */
-    static QString getName() {
+    QString getName() {
         // Define data container
         int data[4];
         char name[48];
@@ -142,7 +146,7 @@ namespace CPU {
      * @brief Returns the CPU max frequency
      * @return CPU max frequency
      */
-    static double getMaxFrequency() {
+    double getMaxFrequency() {
 #ifdef __linux__
         // Get max cpu frequency
         std::ifstream file("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
@@ -192,7 +196,7 @@ namespace CPU {
         return 0.0;
     }
 
-    static unsigned long getPhysicalCores() {
+    unsigned long getPhysicalCores() {
 #ifdef _WIN32
         auto sysInfo = new SYSTEM_INFO();
         GetSystemInfo(sysInfo);
@@ -224,7 +228,7 @@ namespace CPU {
      * @brief Returns the number of logical cores
      * @return Number of logical cores, if error returns -1
      */
-    static unsigned long getLogicalCores() {
+    unsigned long getLogicalCores() {
 #ifdef _WIN32
         // Get number of cores
         try {
@@ -265,7 +269,7 @@ namespace CPU {
      * @brief Does the cpu have hyper-threading technology?
      * @return True if the cpu has hyper-threading technology
      */
-    static bool hasHTT() {
+    bool hasHTT() {
         int data[4];
 #ifdef _WIN32
         __cpuid(data, 1);
@@ -280,7 +284,7 @@ namespace CPU {
      * @brief Returns the CPU frequency
      * @return CPU frequency
      */
-    static double getFrequency() {
+    double getFrequency() {
 #ifdef __linux__
         // Open the file
         std::ifstream file("/proc/cpuinfo");
@@ -328,7 +332,11 @@ namespace CPU {
         return 0.0;
     }
 
-    static double getUtilization() {
+    /**
+     * @brief Returns the CPU utilization
+     * @return CPU utilization
+     */
+    double getUtilization() {
 #ifdef __linux__
         // Data container
         std::vector<double> data;
@@ -450,6 +458,89 @@ namespace CPU {
     }
 
 #endif // _WIN32
+
+    /**
+     * @brief Returns the CPU temperature
+     * @return CPU temperature
+     */
+    double getTemperature() {
+#ifdef __linux__
+        std::ifstream file("/sys/class/thermal/thermal_zone0/temp");
+        if (!file.is_open()) {
+            return 0;
+        }
+        std::string line;
+        while (std::getline(file, line)) {
+            return std::stod(line) / 1000;
+        }
+        file.close();
+#endif // __linux__
+        return 0;
+    }
+
+    Cpu* getCpu(int fkClient, int ID) {
+        return {};
+    }
+}
+
+
+namespace RAM {
+    /**
+     * @brief Returns the total RAM
+     * @return Total RAM
+     */
+    double getTotal() {
+#ifdef __linux__
+        std::ifstream file("/proc/meminfo");
+        if (!file.is_open()) {
+            return 0;
+        }
+        std::string line;
+        std::regex regex(R"(MemTotal:\s+(\d+)\s+kB)");
+        std::smatch match;
+        while (std::getline(file, line)) {
+            if (std::regex_search(line, match, regex)) {
+                return std::stod(match[1]) / 1024 / 1024;
+            }
+        }
+#endif // __linux__
+        return 0;
+    }
+
+    /**
+     * Returns the RAM serial numbers. If an error occurs (most likely lacking privileges), an empty vector is returned.
+     * @return RAM serial numbers
+     */
+    QList<QString> getPartNumbers() {
+#ifdef __linux__
+        auto res = system("dmidecode -t memory > ./ram.txt");
+        if (res != 0) {
+            return {};
+        }
+        std::ifstream file("./ram.txt");
+        if (!file.is_open()) {
+            return {};
+        }
+        std::string line;
+        std::regex regex(R"(Part number: (.+))");
+        std::smatch match;
+        QList<QString> ramPartNumbers;
+        while (std::getline(file, line)) {
+            if (std::regex_search(line, match, regex)) {
+                auto partNumber = QString::fromStdString(match[1]);
+                if (partNumber != "Not Specified") {
+                    ramPartNumbers.append(partNumber);
+                }
+            }
+        }
+        file.close();
+        std::remove("./ram.txt");
+        return ramPartNumbers;
+#endif // __linux__
+        return {};
+    }
+
+
 }
 
 
