@@ -21,7 +21,7 @@ Config::Config()
  */
 void Config::loadFromFile(const QString& fileName) {
     // Print working directory
-    qDebug() << "Working directory: " << QDir::currentPath();
+    // qDebug() << "Working directory: " << QDir::currentPath();
 
     QFile file(fileName);
 

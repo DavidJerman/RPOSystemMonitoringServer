@@ -29,7 +29,7 @@ bool System::hasComponent(Component *component) const {
 }
 
 void System::removeComponent(Component *component) {
-    components.remove(components.indexOf(component));
+    components.removeAt(components.indexOf(component));
 }
 
 QList<Component *> System::getComponents() const {

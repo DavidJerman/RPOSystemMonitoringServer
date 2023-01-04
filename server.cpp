@@ -12,7 +12,7 @@ Server::Server() {
     db = QSqlDatabase();
     config = Config();
     try {
-        config.loadFromFile("C:/QtBuilds/config.cfg");
+        config.loadFromFile("/home/pinkynyte/CLionProjects/RPOSystemMonitoringServer/cmake-build-debug/config.cfg");
     } catch (PropertyNotFoundException &e) {
         qDebug() << "Error loading config: " << e.what();
         throw e;
@@ -297,7 +297,8 @@ int Server::identify(int userID, int clientID) {
     if (userID == -2 || clientID == -2)
         return -2;
 
-    // TODO: Preveri, ce za tega uporbnika ze obstaja client ID, ce ne ga dodaj v PB in vrni nov ID, sicer vrni obstojeci ID
+    // Check if the client is in the database
+
 
     return 0;
 }

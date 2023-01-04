@@ -539,8 +539,6 @@ namespace RAM {
 #endif // __linux__
         return {};
     }
-
-
 }
 
 
