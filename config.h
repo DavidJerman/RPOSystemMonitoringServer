@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include <QException>
+#include <utility>
 
 
 class Config {
@@ -51,8 +52,8 @@ private:
 // NEEDS TO BE TESTED WITH QT CODE!
 class PropertyNotFoundException : public QException {
 public:
-    PropertyNotFoundException(const QString &_message = "") noexcept
-            : _message(_message) {}
+    explicit PropertyNotFoundException(QString _message = "") noexcept
+            : _message(std::move(_message)) {}
 
 
     void raise() const override {
@@ -60,12 +61,12 @@ public:
     }
 
 
-    PropertyNotFoundException *clone() const override {
+    [[nodiscard]] PropertyNotFoundException *clone() const override {
         return new PropertyNotFoundException(*this);
     }
 
 
-    QString message() const noexcept {
+    [[nodiscard]] QString message() const noexcept {
         return _message;
     }
 
@@ -76,8 +77,8 @@ private:
 
 class FileException : public QException {
 public:
-    FileException(const QString &_message = "") noexcept
-            : _message(_message) {}
+    explicit FileException(QString _message = "") noexcept
+            : _message(std::move(_message)) {}
 
 
     void raise() const override {
@@ -85,12 +86,36 @@ public:
     }
 
 
-    FileException *clone() const override {
+    [[nodiscard]] FileException *clone() const override {
         return new FileException(*this);
     }
 
 
-    QString message() const noexcept {
+    [[nodiscard]] QString message() const noexcept {
+        return _message;
+    }
+
+private:
+    QString _message;
+};
+
+class DatabaseException : public QException {
+public:
+    explicit DatabaseException(QString _message = "") noexcept
+            : _message(std::move(_message)) {}
+
+
+    void raise() const override {
+        throw *this;
+    }
+
+
+    [[nodiscard]] DatabaseException *clone() const override {
+        return new DatabaseException(*this);
+    }
+
+
+    [[nodiscard]] QString message() const noexcept {
         return _message;
     }
 

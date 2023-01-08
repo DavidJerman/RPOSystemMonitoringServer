@@ -9,7 +9,6 @@
  */
 Server::Server() {
     // Load config here
-    db = QSqlDatabase();
     config = Config();
     try {
         config.loadFromFile("/home/pinkynyte/CLionProjects/RPOSystemMonitoringServer/cmake-build-debug/config.cfg");
@@ -55,20 +54,26 @@ Server::Server() {
         throw PropertyNotFoundException("ServerPort not found!");
     }
 
-    // TODO: Vzpostavi povezavo z bazo
     QString dbUsername = config.getProperty("DatabaseUsername");
     QString dbPassword = config.getProperty("DatabasePassword");
     QString dbAddress = config.getProperty("DatabaseAddress");
     QString dbPort = config.getProperty("DatabasePort");
     QString dbDB = config.getProperty("DatabaseDB");
-    QString dbConnecter = config.getProperty("Connector");
+    QString dbConnector = config.getProperty("Connector");
 
-    db = QSqlDatabase::addDatabase(dbConnecter);
-    db.setPort(dbPort.toInt());
-    db.setHostName(dbAddress);
+    db = QSqlDatabase::addDatabase(dbConnector);
     db.setDatabaseName(dbDB);
+    db.setHostName(dbAddress);
+    db.setPort(dbPort.toInt());
     db.setUserName(dbUsername);
     db.setPassword(dbPassword);
+    bool ok = db.open();
+    if (!ok) {
+        qDebug() << "Error connecting to database!";
+        throw DatabaseException("Error connecting to database!");
+    } else {
+        qDebug() << "Connected to database: " << db.databaseName();
+    }
 
     server = new QTcpServer(this);
 
@@ -106,6 +111,7 @@ Server::~Server() {
         client->close();
     }
     clients.clear();
+    db.close();
 }
 //https://www.bogotobogo.com/cplusplus/sockets_server_client.php
 //https://www.youtube.com/watch?v=j9uAfTAZrdM
@@ -249,6 +255,7 @@ void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
         }
         if (session->isIdentified() && messageType == MESSAGE::SYSTEM && session->isAuthenticated() &&
             !session->isSystemAdded()) {
+
             auto system = Protocol::jsonToSystem(messageJson);
             if (system != nullptr) {
                 client->write(Protocol::createMessage(MESSAGE::CONFIRM, Protocol::getConfirmationJson(false)));
@@ -266,6 +273,7 @@ void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
         }
         if (session->isAuthenticated() && session->isIdentified() && session->isSystemAdded() &&
             messageType == MESSAGE::DATA) {
+            qDebug() << "<Server> Data";
             auto data = Protocol::getMessageJsons(messageJson);
             auto clientId = session->getClientId();
             auto userId = session->getUserId();
@@ -279,27 +287,44 @@ void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
 }
 
 int Server::authenticate(const QByteArray &username, const QByteArray &password) {
-    // TODO: Remove - for testing purposes only
-    if (username == "test" && password == "test")
-        return -2;
-
-    // Ce najdes uporabnika v bazi vrni njegov IDENTIFY, ce ne vrni 0
-    // -2 je samo za namene testiranja
-
+    // TODO: Session
     // TODO: Preveri v PB uporabnika in geslo, ce se ne ujemata/ni v PB vrni 0, sicer IDENTIFY uporabnika (userID)
+    QSqlQuery query;
+    // TODO: Save passwords as hashes, safer
+    if (!query.exec("SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "'")) {
+        qDebug() << "Error: " << query.lastError().text();
+        return 0;
+    }
+    if (query.next()) {
+        return query.value(0).toInt();
+    }
 
     return 0;
 }
 
 
 int Server::identify(int userID, int clientID) {
+    // TODO: Session
+    QSqlQuery query(db);
+    if (!query.exec("SELECT * FROM client WHERE fk_user = " + QString::number(userID) + " AND id = " + QString::number(clientID))) {
+        qDebug() << "Error: " << query.lastError().text();
+        qDebug() << db.databaseName();
+        return 0;
+    }
+
+    if (query.next()) {
+        return clientID;
+    } else {
+        // Insert a new client
+        if (!query.exec("INSERT INTO client (fk_user, name, operating_system, system_type) VALUES (" + QString::number(userID) + ", 'test', 'test', 'test')")) {
+            qDebug() << "Error: " << query.lastError().text();
+            qDebug() << db.databaseName();
+            return 0;
+        }
+        db.commit();
+    }
+
     // TODO: Remove - for testing purposes only
-    if (userID == -2 || clientID == -2)
-        return -2;
-
-    // Check if the client is in the database
-
-
     return 0;
 }
 

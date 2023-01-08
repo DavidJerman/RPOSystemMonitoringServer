@@ -10,6 +10,8 @@
 #include <QMap>
 
 #include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "config.h"
 #include "Session.h"

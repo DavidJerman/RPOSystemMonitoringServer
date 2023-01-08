@@ -33,7 +33,7 @@ add_executable(SystemMonitoringServer
         tests/run_tests.h
         Utils.h
         tests/test_2_identification.h
-        components/data.h)
+        components/data.h tests/test_3_new_system.h)
 target_link_libraries(SystemMonitoringServer Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Sql)
 
 install(TARGETS SystemMonitoringServer

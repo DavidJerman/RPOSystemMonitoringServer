@@ -335,7 +335,7 @@ int Protocol::getClientId(QByteArray &json) {
     if (document.isObject()) {
         QJsonObject object = document.object();
         if (object.contains("id")) {
-            return object["id"].toString().toInt();
+            return object["id"].toInt();
         }
     }
     return 0;
