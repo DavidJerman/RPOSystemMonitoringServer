@@ -45,12 +45,13 @@ set(HEADER_FILES
         components/component.h
         Session.h
         Constants.h
-        tests/test_1_authentication.h
-        tests/test_0_connection.h
         tests/run_tests.h
         Utils.h
+        components/data.h
+        tests/test_0_connection.h
+        tests/test_1_authentication.h
         tests/test_2_identification.h
-        components/data.h tests/test_3_new_system.h
+        tests/test_3_new_system.h
         )
 
 set(LIBRARIES

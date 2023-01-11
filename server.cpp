@@ -255,12 +255,8 @@ void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
         }
         if (session->isIdentified() && messageType == MESSAGE::SYSTEM && session->isAuthenticated() &&
             !session->isSystemAdded()) {
-
             auto system = Protocol::jsonToSystem(messageJson);
-            if (system != nullptr) {
-                client->write(Protocol::createMessage(MESSAGE::CONFIRM, Protocol::getConfirmationJson(false)));
-                return;
-            }
+            // TODO: More checks
             auto clientId = session->getClientId();
             auto userId = session->getUserId();
             auto res = addSystem(userId, clientId, system);

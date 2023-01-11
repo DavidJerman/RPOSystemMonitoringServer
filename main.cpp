@@ -1,10 +1,10 @@
 #include <QCoreApplication>
 #include <QThread>
-#include <unistd.h>
 
 #include "server.h"
-#include "protocol.h"
 #include "tests/run_tests.h"
+
+#include "components/data.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +18,12 @@ int main(int argc, char *argv[])
         assert(run_tests() == true);
     });
     thread->start();
+
+    // For testing purposes
+    auto partNumbers = RAM::getPartNumbers();
+    for (const auto &partNumber: partNumbers) {
+        qDebug() << partNumber;
+    }
 
     return QCoreApplication::exec();
 }

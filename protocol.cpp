@@ -24,6 +24,7 @@ QByteArray Protocol::UTF8JsonFromFile(const QString &fileName) {
  * @return System class
  */
 System *Protocol::jsonToSystem(const QByteArray &json) {
+    qDebug() << "jsonToSystem: " << json;
     auto doc = QJsonDocument::fromJson(json);
     // Parse
     if (doc.isNull())

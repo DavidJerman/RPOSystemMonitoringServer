@@ -6,6 +6,7 @@
 #include "tests/test_0_connection.h"
 #include "tests/test_1_authentication.h"
 #include "tests/test_2_identification.h"
+#include "tests/test_3_new_system.h"
 
 using namespace Utils;
 
@@ -58,6 +59,20 @@ int run_tests() {
         pass = false;
     } else {
         println("Test 2 passed!                                                 |", Color::GREEN);
+    }
+    results.push_back(res == 0);
+
+    // Test 3
+    println("================================================================", Color::WHITE);
+    println("Running tests 3 - New system                                   |", Color::WHITE);
+    println("----------------------------------------------------------------", Color::WHITE);
+    res = Test_3::run(address, port);
+    println("----------------------------------------------------------------", Color::WHITE);
+    if (res != 0) {
+        println("Test 3 failed!                                                 |", Color::RED);
+        pass = false;
+    } else {
+        println("Test 3 passed!                                                 |", Color::GREEN);
     }
     results.push_back(res == 0);
 

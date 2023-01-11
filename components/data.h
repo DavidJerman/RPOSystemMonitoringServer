@@ -31,6 +31,8 @@ extern "C" {
 #include <fstream>
 #include <vector>
 #include <unistd.h>
+#include <sys/wait.h>
+
 #endif // __linux__
 
 
@@ -513,29 +515,48 @@ namespace RAM {
      */
     QList<QString> getPartNumbers() {
 #ifdef __linux__
-        auto res = system("dmidecode -t memory > ./ram.txt");
-        if (res != 0) {
-            return {};
-        }
-        std::ifstream file("./ram.txt");
-        if (!file.is_open()) {
-            return {};
-        }
-        std::string line;
-        std::regex regex(R"(Part number: (.+))");
-        std::smatch match;
-        QList<QString> ramPartNumbers;
-        while (std::getline(file, line)) {
-            if (std::regex_search(line, match, regex)) {
-                auto partNumber = QString::fromStdString(match[1]);
-                if (partNumber != "Not Specified") {
-                    ramPartNumbers.append(partNumber);
+        // Create pipe
+
+        auto pid = fork();
+        // Child process
+        if (pid == 0) {
+            // Execute dmidecode
+            execl("/usr/sbin/dmidecode", "dmidecode", "-t", "memory", nullptr);
+            // Catch the output
+            std::string line;
+            std::regex regex(R"(Serial Number: (.+))");
+            std::smatch match;
+            while (std::getline(std::cin, line)) {
+                if (std::regex_search(line, match, regex)) {
+                    std::cout << match[1] << std::endl;
                 }
             }
+            // If the execution fails, exit
+            exit(0);
+        } else {
+            // Wait for child
+            waitpid(pid, nullptr, 0);
+            // Catch child output
         }
-        file.close();
-        std::remove("./ram.txt");
-        return ramPartNumbers;
+//        std::ifstream file("./ram.txt");
+//        if (!file.is_open()) {
+//            return {};
+//        }
+//        std::string line;
+//        std::regex regex(R"(Part number: (.+))");
+//        std::smatch match;
+//        QList<QString> ramPartNumbers;
+//        while (std::getline(file, line)) {
+//            if (std::regex_search(line, match, regex)) {
+//                auto partNumber = QString::fromStdString(match[1]);
+//                if (partNumber != "Not Specified") {
+//                    ramPartNumbers.append(partNumber);
+//                }
+//            }
+//        }
+//        file.close();
+//        std::remove("./ram.txt");
+        return {};
 #endif // __linux__
         return {};
     }
