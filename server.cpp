@@ -325,7 +325,157 @@ int Server::identify(int userID, int clientID) {
 }
 
 bool Server::addSystem(int userID, int clientID, System *system) {
-    // TODO: Dodaj sistem v PB in vrni true, ce je uspesno dodan (oz posodobljen), sicer vrni false
-
+    // TODO: Case when system clientID is different from clientID
+    for (const auto &component : system->getComponents()) {
+        // If cpu
+        if (dynamic_cast<Cpu *>(component)) {
+            auto cpu = dynamic_cast<Cpu *>(component);
+            QSqlQuery query(db);
+            if (cpu->getId() == 0) {
+                // If the same cpu is already in the database
+                if (query.exec("SELECT * FROM cpu WHERE name = '" + cpu->getName()
+                + "' AND max_frequency = '" + QString::number(cpu->getMaxFrequency())
+                + "' AND cores = '" + QString::number(cpu->getCores())
+                + "' AND fk_client = " + QString::number(clientID))) {
+                    if (query.next()) {
+                        cpu->setId(query.value(0).toInt());
+                        continue;
+                    }
+                } else {
+                    qDebug() << "Error: " << query.lastError().text();
+                    return false;
+                }
+                if (!query.exec("INSERT INTO cpu (name, max_frequency, cores, fk_client) VALUES ('" + cpu->getName() + "', " + QString::number(cpu->getMaxFrequency()) + ", " + QString::number(cpu->getCores()) + ", " + QString::number(clientID) + ")")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            } else {
+                if (!query.exec("SELECT * FROM cpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(cpu->getId()) + "'")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            }
+            db.commit();
+        } else if (dynamic_cast<Disk *>(component)) {
+            auto disk = dynamic_cast<Disk *>(component);
+            QSqlQuery query(db);
+            if (disk->getId() == 0) {
+                // If the same disk is already in the database
+                if (query.exec("SELECT * FROM disk WHERE name = '" + disk->getName()
+                + "' AND capacity = '" + QString::number(disk->getCapacity())
+                + "' AND type = '" + disk->getType()
+                + "' AND fk_client = " + QString::number(clientID))) {
+                    if (query.next()) {
+                        disk->setId(query.value(0).toInt());
+                        continue;
+                    }
+                } else {
+                    qDebug() << "Error: " << query.lastError().text();
+                    return false;
+                }
+                if (!query.exec("INSERT INTO disk (name, capacity, type, fk_client) VALUES ('" + disk->getName() + "', " + QString::number(disk->getCapacity()) + ", '" + disk->getType() + "', " + QString::number(clientID) + ")")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            } else {
+                if (!query.exec("SELECT * FROM disk WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(disk->getId()) + "'")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            }
+            db.commit();
+        } else if (dynamic_cast<Gpu *>(component)) {
+            auto gpu = dynamic_cast<Gpu *>(component);
+            QSqlQuery query(db);
+            if (gpu->getId() == 0) {
+                // If the same gpu is already in the database
+                if (query.exec("SELECT * FROM gpu WHERE name = '" + gpu->getName()
+                + "' AND max_frequency = '" + QString::number(gpu->getMaxFrequency())
+                + "' AND capacity = '" + QString::number(gpu->getVRam())
+                + "' AND fk_client = " + QString::number(clientID))) {
+                    if (query.next()) {
+                        gpu->setId(query.value(0).toInt());
+                        continue;
+                    }
+                } else {
+                    qDebug() << "Error: " << query.lastError().text();
+                    return false;
+                }
+                if (!query.exec("INSERT INTO gpu (name, max_frequency, capacity, fk_client) VALUES ('" + gpu->getName() + "', " + QString::number(gpu->getMaxFrequency()) + ", " + QString::number(gpu->getVRam()) + ", " + QString::number(clientID) + ")")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            } else {
+                if (!query.exec("SELECT * FROM gpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(gpu->getId()) + "'")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            }
+        } else if (dynamic_cast<Network *>(component)) {
+            auto network = dynamic_cast<Network *>(component);
+            QSqlQuery query(db);
+            if (network->getId() == 0) {
+                // If the same network is already in the database
+                if (query.exec("SELECT * FROM network WHERE name = '" + network->getName()
+                + "' AND type = '" + network->getType()
+                + "' AND fk_client = " + QString::number(clientID))) {
+                    if (query.next()) {
+                        network->setId(query.value(0).toInt());
+                        continue;
+                    }
+                } else {
+                    qDebug() << "Error: " << query.lastError().text();
+                    return false;
+                }
+                if (!query.exec("INSERT INTO network (name, type, fk_client) VALUES ('" + network->getName() + "', '" + network->getType() + "', " + QString::number(clientID) + ")")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            } else {
+                if (!query.exec("SELECT * FROM network WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(network->getId()) + "'")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            }
+        } else if (dynamic_cast<Ram *>(component)) {
+            auto ram = dynamic_cast<Ram *>(component);
+            QSqlQuery query(db);
+            if (ram->getId() == 0) {
+                // If the same ram is already in the database
+                if (query.exec("SELECT * FROM ram WHERE name = '" + ram->getName()
+                + "' AND capacity = '" + QString::number(ram->getCapacity())
+                + "' AND type = '" + ram->getType()
+                + "' AND frequency = '" + QString::number(ram->getFrequency())
+                + "' AND fk_client = " + QString::number(clientID))) {
+                    if (query.next()) {
+                        ram->setId(query.value(0).toInt());
+                        continue;
+                    }
+                } else {
+                    qDebug() << "Error: " << query.lastError().text();
+                    return false;
+                }
+                if (!query.exec("INSERT INTO ram (name, capacity, type, frequency, fk_client) VALUES ('" + ram->getName() + "', " + QString::number(ram->getCapacity()) + ", '" + ram->getType() + "', " + QString::number(ram->getFrequency()) + ", " + QString::number(clientID) + ")")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            } else {
+                if (!query.exec("SELECT * FROM ram WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(ram->getId()) + "'")) {
+                    qDebug() << "Error: " << query.lastError().text();
+                    qDebug() << db.databaseName();
+                    return false;
+                }
+            }
+        }
+    }
     return true;
 }

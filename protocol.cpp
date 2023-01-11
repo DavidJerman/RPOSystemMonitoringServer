@@ -24,7 +24,6 @@ QByteArray Protocol::UTF8JsonFromFile(const QString &fileName) {
  * @return System class
  */
 System *Protocol::jsonToSystem(const QByteArray &json) {
-    qDebug() << "jsonToSystem: " << json;
     auto doc = QJsonDocument::fromJson(json);
     // Parse
     if (doc.isNull())
@@ -403,17 +402,23 @@ QByteArray Protocol::createMessage(MESSAGE messageType, const QByteArray &data) 
  */
 QList<MESSAGE> Protocol::getMessageTypes(const QByteArray &message) {
     QList<MESSAGE> messageTypes;
-    qint64 size = 0;
+    quint64 size;
     auto ptr = message.begin();
     do {
-        size = ((qint64) *ptr << 56) + ((qint64) *(ptr + 1) << 48) + ((qint64) *(ptr + 2) << 40) +
-               ((qint64) *(ptr + 3) << 32) + ((qint64) *(ptr + 4) << 24) + ((qint64) *(ptr + 5) << 16) +
-               ((qint64) *(ptr + 6) << 8) + (qint64) *(ptr + 7);
-        ptr += S_INT64;
-        auto messageType = (MESSAGE) QByteArray(ptr, 1).at(0);
+        auto q0 = static_cast<quint8>(*ptr);
+        auto q1 = static_cast<quint8>(*(ptr + 1));
+        auto q2 = static_cast<quint8>(*(ptr + 2));
+        auto q3 = static_cast<quint8>(*(ptr + 3));
+        auto q4 = static_cast<quint8>(*(ptr + 4));
+        auto q5 = static_cast<quint8>(*(ptr + 5));
+        auto q6 = static_cast<quint8>(*(ptr + 6));
+        auto q7 = static_cast<quint8>(*(ptr + 7));
+        size = ((quint64) q0 << 56) + ((quint64) q1 << 48) + ((quint64) q2 << 40) +
+               ((quint64) q3 << 32) + ((quint64) q4 << 24) + ((quint64) q5 << 16) +
+               ((quint64) q6 << 8) + (quint64) q7;
+        auto messageType = (MESSAGE) QByteArray(ptr + S_INT64, 1).at(0);
         messageTypes.append(messageType);
-        ptr += size - S_INT64;
-
+        ptr += size;
     } while (ptr < message.end());
     return messageTypes;
 }
@@ -425,15 +430,23 @@ QList<MESSAGE> Protocol::getMessageTypes(const QByteArray &message) {
  */
 QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
     QList<QByteArray> jsons;
-    qint64 size = 0;
+    quint64 size = 0;
     auto ptr = message.begin();
     do {
-        size += ((qint64) (*ptr) << 56) + ((qint64) (*(ptr + 1)) << 48) + ((qint64) (*(ptr + 2)) << 40) +
-                ((qint64) (*(ptr + 3)) << 32) + ((qint64) (*(ptr + 4)) << 24) + ((qint64) (*(ptr + 5)) << 16) +
-                ((qint64) (*(ptr + 6)) << 8) + (qint64) (*(ptr + 7));
+        auto q0 = static_cast<quint8>(*ptr);
+        auto q1 = static_cast<quint8>(*(ptr + 1));
+        auto q2 = static_cast<quint8>(*(ptr + 2));
+        auto q3 = static_cast<quint8>(*(ptr + 3));
+        auto q4 = static_cast<quint8>(*(ptr + 4));
+        auto q5 = static_cast<quint8>(*(ptr + 5));
+        auto q6 = static_cast<quint8>(*(ptr + 6));
+        auto q7 = static_cast<quint8>(*(ptr + 7));
+        size = ((quint64) q0 << 56) + ((quint64) q1 << 48) + ((quint64) q2 << 40) +
+               ((quint64) q3 << 32) + ((quint64) q4 << 24) + ((quint64) q5 << 16) +
+               ((quint64) q6 << 8) + (quint64) q7;
         ptr += S_INT64;
         ptr += S_CHAR;
-        auto data = message.mid(ptr - message.begin(), size - S_INT64 - S_CHAR);
+        auto data = message.mid((int)(ptr - message.begin()), (int)(size - S_INT64 - S_CHAR));
         jsons.append(data);
         ptr += size - S_INT64 - S_CHAR;
 

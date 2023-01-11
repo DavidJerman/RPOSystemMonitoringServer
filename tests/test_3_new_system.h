@@ -82,8 +82,10 @@ namespace Test_3 {
         // Create system
         auto system = new System();
         system->addComponent(new Gpu(2670, 24, TEST_CLIENT_ID, 0, "NVIDIA GeForce RTX 4090")); // IMPORTANT: ID = 0, means to add new
-//        system->addComponent(new Cpu(4.2, 8, TEST_CLIENT_ID, 0, "Intel Core i7-9700K")); // IMPORTANT: ID = 0, means to add new
-//        system->addComponent(new Ram(16, "DDR4", 3200, TEST_CLIENT_ID, 0, "Corsair Vengeance LPX")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Cpu(4.2, 8, TEST_CLIENT_ID, 0, "Intel Core i7-9700K")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Ram(16, "DDR4", 3200, TEST_CLIENT_ID, 0, "Corsair Vengeance LPX")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Disk(1000, "SSD", TEST_CLIENT_ID, 0, "Samsung 970 EVO Plus")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Network("Ethernet", TEST_CLIENT_ID, 0, "Intel I219-V")); // IMPORTANT: ID = 0, means to add new
         // Try sending system
         if (socket->isValid()) {
             socket->write(Protocol::createMessage(MESSAGE::SYSTEM, Protocol::systemToJson(system)));
@@ -91,6 +93,7 @@ namespace Test_3 {
         // Receive data
         if (socket->isValid()) {
             socket->waitForReadyRead(WAIT_FOR_READY_READ);
+            // Sleep for 1 second to allow server to process data
             auto data = socket->readAll();
             auto messageType = Protocol::getMessageTypes(data)[0];
             if (messageType == MESSAGE::CONFIRM) {

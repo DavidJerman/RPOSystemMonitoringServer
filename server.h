@@ -16,6 +16,7 @@
 #include "config.h"
 #include "Session.h"
 #include "protocol.h"
+#include "components/system.h"
 
 class Server : public QObject
 {
