@@ -6,14 +6,13 @@
 
 #include "components/data.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
     Server server;
 
     // Run tests in separate thread
-    auto* thread = new QThread();
+    auto *thread = new QThread();
     QObject::connect(thread, &QThread::started, []() {
         assert(run_tests() == true);
     });

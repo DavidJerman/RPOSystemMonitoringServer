@@ -19,7 +19,8 @@ namespace Test_1 {
         }
         // Try authenticating with wrong username and password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("wrong_username", "wrong_password")));
+            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE,
+                                                  Protocol::getAuthenticationJson("wrong_username", "wrong_password")));
         }
         // Receive data
         if (socket->isValid()) {
@@ -58,7 +59,8 @@ namespace Test_1 {
         }
         // Try authenticating with correct username and wrong password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("test", "wrong_password")));
+            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE,
+                                                  Protocol::getAuthenticationJson("test", "wrong_password")));
         }
         // Receive data
         if (socket->isValid()) {
@@ -95,7 +97,8 @@ namespace Test_1 {
         }
         // Try authenticating with correct username and password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
+            socket->write(
+                    Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
         }
         // Receive data
         if (socket->isValid()) {

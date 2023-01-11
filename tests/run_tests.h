@@ -82,9 +82,11 @@ int run_tests() {
     println("----------------------------------------------------------------", Color::WHITE);
     for (int i = 0; i < results.size(); i++) {
         if (results[i]) {
-            println("Test " + QString::number(i) + " passed!                                                 |", Color::GREEN);
+            println("Test " + QString::number(i) + " passed!                                                 |",
+                    Color::GREEN);
         } else {
-            println("Test " + QString::number(i) + " failed!                                                 |", Color::RED);
+            println("Test " + QString::number(i) + " failed!                                                 |",
+                    Color::RED);
         }
     }
     println("================================================================", Color::WHITE);

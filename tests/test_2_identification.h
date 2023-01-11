@@ -30,7 +30,8 @@ namespace Test_2 {
         }
         // Try authenticating with correct username and password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
+            socket->write(
+                    Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
         }
         // Receive data
         if (socket->isValid()) {
@@ -93,7 +94,8 @@ namespace Test_2 {
         }
         // Try authenticating with correct username and password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
+            socket->write(
+                    Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson("Test", "test123")));
         }
         // Receive data
         if (socket->isValid()) {

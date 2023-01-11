@@ -446,7 +446,7 @@ QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
                ((quint64) q6 << 8) + (quint64) q7;
         ptr += S_INT64;
         ptr += S_CHAR;
-        auto data = message.mid((int)(ptr - message.begin()), (int)(size - S_INT64 - S_CHAR));
+        auto data = message.mid((int) (ptr - message.begin()), (int) (size - S_INT64 - S_CHAR));
         jsons.append(data);
         ptr += size - S_INT64 - S_CHAR;
 
@@ -454,6 +454,11 @@ QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
     return jsons;
 }
 
+/**
+ * Interprets the message confirmation.
+ * @param json Confirmation JSON
+ * @return Confirmation (true/false)
+ */
 bool Protocol::getConfirmation(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
     if (document.isObject()) {

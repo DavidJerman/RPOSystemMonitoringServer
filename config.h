@@ -15,7 +15,7 @@ class Config {
 public:
     Config();
 
-    void loadFromFile(const QString& fileName);
+    void loadFromFile(const QString &fileName);
 
     void addProperty(QString property, QString value);
 
@@ -25,9 +25,9 @@ public:
 
     bool isEmpty() noexcept;
 
-    bool hasProperty(const QString& property);
+    bool hasProperty(const QString &property);
 
-    bool hasValue(const QString& value);
+    bool hasValue(const QString &value);
 
     bool isLoaded();
 

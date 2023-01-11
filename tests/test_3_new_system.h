@@ -31,7 +31,8 @@ namespace Test_3 {
         }
         // Try authenticating with correct username and password
         if (socket->isValid()) {
-            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE, Protocol::getAuthenticationJson(TEST_USERNAME, TEST_PASSWORD)));
+            socket->write(Protocol::createMessage(MESSAGE::AUTHENTICATE,
+                                                  Protocol::getAuthenticationJson(TEST_USERNAME, TEST_PASSWORD)));
         }
         // Receive data
         if (socket->isValid()) {
@@ -81,11 +82,16 @@ namespace Test_3 {
         // Try sending a new system
         // Create system
         auto system = new System();
-        system->addComponent(new Gpu(2670, 24, TEST_CLIENT_ID, 0, "NVIDIA GeForce RTX 4090")); // IMPORTANT: ID = 0, means to add new
-        system->addComponent(new Cpu(4.2, 8, TEST_CLIENT_ID, 0, "Intel Core i7-9700K")); // IMPORTANT: ID = 0, means to add new
-        system->addComponent(new Ram(16, "DDR4", 3200, TEST_CLIENT_ID, 0, "Corsair Vengeance LPX")); // IMPORTANT: ID = 0, means to add new
-        system->addComponent(new Disk(1000, "SSD", TEST_CLIENT_ID, 0, "Samsung 970 EVO Plus")); // IMPORTANT: ID = 0, means to add new
-        system->addComponent(new Network("Ethernet", TEST_CLIENT_ID, 0, "Intel I219-V")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(
+                new Gpu(2670, 24, TEST_CLIENT_ID, 0, "NVIDIA GeForce RTX 4090")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(
+                new Cpu(4.2, 8, TEST_CLIENT_ID, 0, "Intel Core i7-9700K")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Ram(16, "DDR4", 3200, TEST_CLIENT_ID, 0,
+                                     "Corsair Vengeance LPX")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(new Disk(1000, "SSD", TEST_CLIENT_ID, 0,
+                                      "Samsung 970 EVO Plus")); // IMPORTANT: ID = 0, means to add new
+        system->addComponent(
+                new Network("Ethernet", TEST_CLIENT_ID, 0, "Intel I219-V")); // IMPORTANT: ID = 0, means to add new
         // Try sending system
         if (socket->isValid()) {
             socket->write(Protocol::createMessage(MESSAGE::SYSTEM, Protocol::systemToJson(system)));

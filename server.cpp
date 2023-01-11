@@ -102,7 +102,6 @@ Server::Server() {
 /**
  * @brief Deletes the server and disconnects all clients
  */
-//https://www.youtube.com/watch?v=u5OdR46542M
 Server::~Server() {
     server->close();
     server->deleteLater();
@@ -113,8 +112,8 @@ Server::~Server() {
     clients.clear();
     db.close();
 }
-//https://www.bogotobogo.com/cplusplus/sockets_server_client.php
-//https://www.youtube.com/watch?v=j9uAfTAZrdM
+
+
 /**
  * @brief Accepts the new connection and saves it to a list
  */
@@ -133,9 +132,9 @@ void Server::onNewConnection() {
 }
 
 /**
- * @brief Reads the client message and processes it
+ * @brief Reads the data from the client and sends it to the parser
+ * @param socket The socket of the client
  */
-
 void Server::onReadReady() {
     auto client = reinterpret_cast<QTcpSocket *>(sender());
 
@@ -144,15 +143,16 @@ void Server::onReadReady() {
     parseMessage(client, wholeData);
 }
 
+
 bool Server::containsSocket(QTcpSocket *socket) {
     return clients.contains(socket);
 }
 
+
 /**
- *
- * @param clientSocket
- * če ni našel socket-a
- * @return null_ptr
+ * @brief Returns the session for the given socket
+ * @param clientSocket The socket to get the session for
+ * @return The session for the given socket
  */
 Session *Server::getSession(QTcpSocket *clientSocket) const {
     if (clients.contains(clientSocket)) {
@@ -161,6 +161,10 @@ Session *Server::getSession(QTcpSocket *clientSocket) const {
     return nullptr;
 }
 
+
+/**
+ * @brief Removes the client from the list
+ */
 void Server::onDisconnected() {
     auto socket = reinterpret_cast<QTcpSocket *>(sender());
     if (clients.contains(socket))
@@ -168,6 +172,12 @@ void Server::onDisconnected() {
     socket->deleteLater();
 }
 
+
+/**
+ * @brief Parses the message and processes it
+ * @param client
+ * @param message
+ */
 void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
     // TODO: Remove for production
     // qDebug() << "User " << client->peerAddress().toString() << " sent: " << msg;
@@ -282,6 +292,13 @@ void Server::parseMessage(QTcpSocket *client, const QByteArray &msg) {
     }
 }
 
+
+/**
+ * @brief Authenticates the user
+ * @param username
+ * @param password
+ * @return 0 if not authenticated, user id if authenticated
+ */
 int Server::authenticate(const QByteArray &username, const QByteArray &password) {
     // TODO: Session
     // TODO: Preveri v PB uporabnika in geslo, ce se ne ujemata/ni v PB vrni 0, sicer IDENTIFY uporabnika (userID)
@@ -299,10 +316,17 @@ int Server::authenticate(const QByteArray &username, const QByteArray &password)
 }
 
 
+/**
+ * @brief Identifies user
+ * @param userId User ID
+ * @param clientId Client ID
+ * @return 0 if failed, 1 if success
+ */
 int Server::identify(int userID, int clientID) {
     // TODO: Session
     QSqlQuery query(db);
-    if (!query.exec("SELECT * FROM client WHERE fk_user = " + QString::number(userID) + " AND id = " + QString::number(clientID))) {
+    if (!query.exec("SELECT * FROM client WHERE fk_user = " + QString::number(userID) + " AND id = " +
+                    QString::number(clientID))) {
         qDebug() << "Error: " << query.lastError().text();
         qDebug() << db.databaseName();
         return 0;
@@ -312,7 +336,9 @@ int Server::identify(int userID, int clientID) {
         return clientID;
     } else {
         // Insert a new client
-        if (!query.exec("INSERT INTO client (fk_user, name, operating_system, system_type) VALUES (" + QString::number(userID) + ", 'test', 'test', 'test')")) {
+        if (!query.exec(
+                "INSERT INTO client (fk_user, name, operating_system, system_type) VALUES (" + QString::number(userID) +
+                ", 'test', 'test', 'test')")) {
             qDebug() << "Error: " << query.lastError().text();
             qDebug() << db.databaseName();
             return 0;
@@ -324,9 +350,17 @@ int Server::identify(int userID, int clientID) {
     return 0;
 }
 
+
+/**
+ * @brief Adds a new system to the database
+ * @param userID User ID
+ * @param clientID Client ID
+ * @param system System to be added
+ * @return 0 if error, 1 if success
+ */
 bool Server::addSystem(int userID, int clientID, System *system) {
     // TODO: Case when system clientID is different from clientID
-    for (const auto &component : system->getComponents()) {
+    for (const auto &component: system->getComponents()) {
         // If cpu
         if (dynamic_cast<Cpu *>(component)) {
             auto cpu = dynamic_cast<Cpu *>(component);
@@ -334,9 +368,9 @@ bool Server::addSystem(int userID, int clientID, System *system) {
             if (cpu->getId() == 0) {
                 // If the same cpu is already in the database
                 if (query.exec("SELECT * FROM cpu WHERE name = '" + cpu->getName()
-                + "' AND max_frequency = '" + QString::number(cpu->getMaxFrequency())
-                + "' AND cores = '" + QString::number(cpu->getCores())
-                + "' AND fk_client = " + QString::number(clientID))) {
+                               + "' AND max_frequency = '" + QString::number(cpu->getMaxFrequency())
+                               + "' AND cores = '" + QString::number(cpu->getCores())
+                               + "' AND fk_client = " + QString::number(clientID))) {
                     if (query.next()) {
                         cpu->setId(query.value(0).toInt());
                         continue;
@@ -345,13 +379,17 @@ bool Server::addSystem(int userID, int clientID, System *system) {
                     qDebug() << "Error: " << query.lastError().text();
                     return false;
                 }
-                if (!query.exec("INSERT INTO cpu (name, max_frequency, cores, fk_client) VALUES ('" + cpu->getName() + "', " + QString::number(cpu->getMaxFrequency()) + ", " + QString::number(cpu->getCores()) + ", " + QString::number(clientID) + ")")) {
+                if (!query.exec(
+                        "INSERT INTO cpu (name, max_frequency, cores, fk_client) VALUES ('" + cpu->getName() + "', " +
+                        QString::number(cpu->getMaxFrequency()) + ", " + QString::number(cpu->getCores()) + ", " +
+                        QString::number(clientID) + ")")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
                 }
             } else {
-                if (!query.exec("SELECT * FROM cpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(cpu->getId()) + "'")) {
+                if (!query.exec("SELECT * FROM cpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" +
+                                QString::number(cpu->getId()) + "'")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
@@ -364,9 +402,9 @@ bool Server::addSystem(int userID, int clientID, System *system) {
             if (disk->getId() == 0) {
                 // If the same disk is already in the database
                 if (query.exec("SELECT * FROM disk WHERE name = '" + disk->getName()
-                + "' AND capacity = '" + QString::number(disk->getCapacity())
-                + "' AND type = '" + disk->getType()
-                + "' AND fk_client = " + QString::number(clientID))) {
+                               + "' AND capacity = '" + QString::number(disk->getCapacity())
+                               + "' AND type = '" + disk->getType()
+                               + "' AND fk_client = " + QString::number(clientID))) {
                     if (query.next()) {
                         disk->setId(query.value(0).toInt());
                         continue;
@@ -375,13 +413,17 @@ bool Server::addSystem(int userID, int clientID, System *system) {
                     qDebug() << "Error: " << query.lastError().text();
                     return false;
                 }
-                if (!query.exec("INSERT INTO disk (name, capacity, type, fk_client) VALUES ('" + disk->getName() + "', " + QString::number(disk->getCapacity()) + ", '" + disk->getType() + "', " + QString::number(clientID) + ")")) {
+                if (!query.exec(
+                        "INSERT INTO disk (name, capacity, type, fk_client) VALUES ('" + disk->getName() + "', " +
+                        QString::number(disk->getCapacity()) + ", '" + disk->getType() + "', " +
+                        QString::number(clientID) + ")")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
                 }
             } else {
-                if (!query.exec("SELECT * FROM disk WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(disk->getId()) + "'")) {
+                if (!query.exec("SELECT * FROM disk WHERE fk_client = " + QString::number(clientID) + " AND id = '" +
+                                QString::number(disk->getId()) + "'")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
@@ -394,9 +436,9 @@ bool Server::addSystem(int userID, int clientID, System *system) {
             if (gpu->getId() == 0) {
                 // If the same gpu is already in the database
                 if (query.exec("SELECT * FROM gpu WHERE name = '" + gpu->getName()
-                + "' AND max_frequency = '" + QString::number(gpu->getMaxFrequency())
-                + "' AND capacity = '" + QString::number(gpu->getVRam())
-                + "' AND fk_client = " + QString::number(clientID))) {
+                               + "' AND max_frequency = '" + QString::number(gpu->getMaxFrequency())
+                               + "' AND capacity = '" + QString::number(gpu->getVRam())
+                               + "' AND fk_client = " + QString::number(clientID))) {
                     if (query.next()) {
                         gpu->setId(query.value(0).toInt());
                         continue;
@@ -405,13 +447,17 @@ bool Server::addSystem(int userID, int clientID, System *system) {
                     qDebug() << "Error: " << query.lastError().text();
                     return false;
                 }
-                if (!query.exec("INSERT INTO gpu (name, max_frequency, capacity, fk_client) VALUES ('" + gpu->getName() + "', " + QString::number(gpu->getMaxFrequency()) + ", " + QString::number(gpu->getVRam()) + ", " + QString::number(clientID) + ")")) {
+                if (!query.exec(
+                        "INSERT INTO gpu (name, max_frequency, capacity, fk_client) VALUES ('" + gpu->getName() +
+                        "', " + QString::number(gpu->getMaxFrequency()) + ", " + QString::number(gpu->getVRam()) +
+                        ", " + QString::number(clientID) + ")")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
                 }
             } else {
-                if (!query.exec("SELECT * FROM gpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(gpu->getId()) + "'")) {
+                if (!query.exec("SELECT * FROM gpu WHERE fk_client = " + QString::number(clientID) + " AND id = '" +
+                                QString::number(gpu->getId()) + "'")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
@@ -423,8 +469,8 @@ bool Server::addSystem(int userID, int clientID, System *system) {
             if (network->getId() == 0) {
                 // If the same network is already in the database
                 if (query.exec("SELECT * FROM network WHERE name = '" + network->getName()
-                + "' AND type = '" + network->getType()
-                + "' AND fk_client = " + QString::number(clientID))) {
+                               + "' AND type = '" + network->getType()
+                               + "' AND fk_client = " + QString::number(clientID))) {
                     if (query.next()) {
                         network->setId(query.value(0).toInt());
                         continue;
@@ -433,13 +479,15 @@ bool Server::addSystem(int userID, int clientID, System *system) {
                     qDebug() << "Error: " << query.lastError().text();
                     return false;
                 }
-                if (!query.exec("INSERT INTO network (name, type, fk_client) VALUES ('" + network->getName() + "', '" + network->getType() + "', " + QString::number(clientID) + ")")) {
+                if (!query.exec("INSERT INTO network (name, type, fk_client) VALUES ('" + network->getName() + "', '" +
+                                network->getType() + "', " + QString::number(clientID) + ")")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
                 }
             } else {
-                if (!query.exec("SELECT * FROM network WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(network->getId()) + "'")) {
+                if (!query.exec("SELECT * FROM network WHERE fk_client = " + QString::number(clientID) + " AND id = '" +
+                                QString::number(network->getId()) + "'")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
@@ -451,10 +499,10 @@ bool Server::addSystem(int userID, int clientID, System *system) {
             if (ram->getId() == 0) {
                 // If the same ram is already in the database
                 if (query.exec("SELECT * FROM ram WHERE name = '" + ram->getName()
-                + "' AND capacity = '" + QString::number(ram->getCapacity())
-                + "' AND type = '" + ram->getType()
-                + "' AND frequency = '" + QString::number(ram->getFrequency())
-                + "' AND fk_client = " + QString::number(clientID))) {
+                               + "' AND capacity = '" + QString::number(ram->getCapacity())
+                               + "' AND type = '" + ram->getType()
+                               + "' AND frequency = '" + QString::number(ram->getFrequency())
+                               + "' AND fk_client = " + QString::number(clientID))) {
                     if (query.next()) {
                         ram->setId(query.value(0).toInt());
                         continue;
@@ -463,13 +511,17 @@ bool Server::addSystem(int userID, int clientID, System *system) {
                     qDebug() << "Error: " << query.lastError().text();
                     return false;
                 }
-                if (!query.exec("INSERT INTO ram (name, capacity, type, frequency, fk_client) VALUES ('" + ram->getName() + "', " + QString::number(ram->getCapacity()) + ", '" + ram->getType() + "', " + QString::number(ram->getFrequency()) + ", " + QString::number(clientID) + ")")) {
+                if (!query.exec(
+                        "INSERT INTO ram (name, capacity, type, frequency, fk_client) VALUES ('" + ram->getName() +
+                        "', " + QString::number(ram->getCapacity()) + ", '" + ram->getType() + "', " +
+                        QString::number(ram->getFrequency()) + ", " + QString::number(clientID) + ")")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
                 }
             } else {
-                if (!query.exec("SELECT * FROM ram WHERE fk_client = " + QString::number(clientID) + " AND id = '" + QString::number(ram->getId()) + "'")) {
+                if (!query.exec("SELECT * FROM ram WHERE fk_client = " + QString::number(clientID) + " AND id = '" +
+                                QString::number(ram->getId()) + "'")) {
                     qDebug() << "Error: " << query.lastError().text();
                     qDebug() << db.databaseName();
                     return false;
