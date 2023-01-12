@@ -3,6 +3,8 @@
 
 #include "components/component.h"
 
+#endif // RAM_H
+
 class Ram : public Component {
 public:
     Ram(double capacity, QString type, double frequency, int fkClient, int ID, const QString &name);
@@ -30,4 +32,4 @@ private:
     int fkClient;
 };
 
-#endif // RAM_H
+

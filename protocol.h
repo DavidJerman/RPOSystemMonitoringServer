@@ -9,7 +9,7 @@
 
 #include <QFile>
 
-#include "components/system.h"
+#include "components/data.h"
 
 #include "Constants.h"
 
@@ -64,7 +64,9 @@ public:
     static QList<MESSAGE> getMessageTypes(const QByteArray &message);
 
     static QList<QByteArray> getMessageJsons(const QByteArray &message);
-};
 
+    // Getting data json - ugly function, but it works
+    static QByteArray getDataJson(System *system);
+};
 
 #endif // PROTOCOL_H

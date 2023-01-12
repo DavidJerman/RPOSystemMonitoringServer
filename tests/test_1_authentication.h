@@ -2,6 +2,9 @@
 // Created by david on 13. 12. 2022.
 //
 
+#ifndef SYSTEMMONITORINGSERVER_AUTHENTICATIONTEST_H
+#define SYSTEMMONITORINGSERVER_AUTHENTICATIONTEST_H
+
 #include "Constants.h"
 
 namespace Test_1 {
@@ -123,3 +126,5 @@ namespace Test_1 {
         return 0;
     }
 }
+
+#endif //SYSTEMMONITORINGSERVER_AUTHENTICATIONTEST_H

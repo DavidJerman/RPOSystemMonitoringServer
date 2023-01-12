@@ -52,7 +52,7 @@ set(HEADER_FILES
         tests/test_1_authentication.h
         tests/test_2_identification.h
         tests/test_3_new_system.h
-        )
+        tests/test_4_adding_data.h)
 
 set(LIBRARIES
         Qt${QT_VERSION_MAJOR}::Core

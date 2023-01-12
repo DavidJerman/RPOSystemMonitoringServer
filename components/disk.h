@@ -4,6 +4,8 @@
 #include "components/component.h"
 #include <QString>
 
+#endif // DISK_H
+
 class Disk : public Component {
 public:
     Disk(double capacity, QString type, int fkClient, int ID, const QString &name);
@@ -26,4 +28,4 @@ private:
     int fkClient;
 };
 
-#endif // DISK_H
+

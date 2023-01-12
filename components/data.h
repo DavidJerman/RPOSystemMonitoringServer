@@ -24,6 +24,7 @@ extern "C" {
 #endif // _WIN32
 
 #ifdef __linux__
+
 #include <cpuid.h>
 #include <iostream>
 #include <string>
@@ -35,14 +36,9 @@ extern "C" {
 
 #endif // __linux__
 
-
-#include "components/cpu.h"
-#include "components/gpu.h"
-#include "components/ram.h"
-#include "components/network.h"
-#include "components/disk.h"
 #include "components/system.h"
 
+#endif //SYSTEMMONITORINGSERVER_DATA_H
 
 #ifdef _WIN32
 typedef struct PROCESSOR_POWER_INFORMATION {
@@ -561,6 +557,3 @@ namespace RAM {
         return {};
     }
 }
-
-
-#endif //SYSTEMMONITORINGSERVER_DATA_H

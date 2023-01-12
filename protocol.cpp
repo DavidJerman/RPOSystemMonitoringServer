@@ -469,3 +469,37 @@ bool Protocol::getConfirmation(QByteArray &json) {
     }
     return false;
 }
+
+QByteArray Protocol::getDataJson(System *system) {
+    QJsonObject object;
+    // Cpu
+    int cpuC = 0;
+    QJsonObject cpus;
+    for (const auto &component: system->getComponents()) {
+        if (dynamic_cast<Cpu*>(component)) {
+            // Assumes there is only one CPU
+            auto frequency = CPU::getFrequency();
+            auto temperature = CPU::getTemperature();
+            auto utilization = CPU::getUtilization();
+            QJsonObject cpuData;
+            cpuData.insert("frequency", frequency);
+            cpuData.insert("temperature", temperature);
+            cpuData.insert("utilization", utilization);
+            QJsonObject cpu;
+            cpu.insert("id", component->getId());
+            cpu.insert("data", cpuData);
+            cpuC++;
+            cpus.insert("cpu_" + QString::number(cpuC), cpu);
+        }
+    }
+    object.insert("cpu", cpus);
+    // Gpu
+    // TODO: Add GPU data
+    // Ram
+    // TODO: Add RAM data
+    // Disk
+    // TODO: Add disk data
+    // Network
+    // TODO: Add network data
+    return QJsonDocument(object).toJson();
+}

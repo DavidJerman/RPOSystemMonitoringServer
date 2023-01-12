@@ -3,6 +3,8 @@
 
 #include "components/component.h"
 
+#endif // NETWORK_H
+
 class Network : public Component {
 public:
     Network(QString type, int fk_client, int ID, const QString &name);
@@ -20,4 +22,4 @@ private:
     int fkClient;
 };
 
-#endif // NETWORK_H
+

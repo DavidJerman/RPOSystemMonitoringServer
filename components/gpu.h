@@ -3,6 +3,8 @@
 
 #include "components/component.h"
 
+#endif // GPU_H
+
 class Gpu : public Component {
 public:
     Gpu(double maxFrequency, double VRam, int fkClient, int ID, const QString &name);
@@ -24,5 +26,3 @@ private:
     double vRam;
     int fkClient;
 };
-
-#endif // GPU_H

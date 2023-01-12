@@ -42,5 +42,4 @@ private:
     System *system;
 };
 
-
 #endif //SYSTEMMONITORINGSERVER_SESSION_H

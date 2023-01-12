@@ -4,8 +4,6 @@
 #include "server.h"
 #include "tests/run_tests.h"
 
-#include "components/data.h"
-
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 

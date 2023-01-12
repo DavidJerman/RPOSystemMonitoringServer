@@ -2,11 +2,14 @@
 // Created by david on 13. 12. 2022.
 //
 
-#include "Utils.h"
+#ifndef SYSTEMMONITORINGSERVER_TESTS_H
+#define SYSTEMMONITORINGSERVER_TESTS_H
+
 #include "tests/test_0_connection.h"
 #include "tests/test_1_authentication.h"
 #include "tests/test_2_identification.h"
 #include "tests/test_3_new_system.h"
+#include "tests/test_4_adding_data.h"
 
 using namespace Utils;
 
@@ -76,6 +79,20 @@ int run_tests() {
     }
     results.push_back(res == 0);
 
+    // Test 4
+    println("================================================================", Color::WHITE);
+    println("Running tests 4 - Adding data                                  |", Color::WHITE);
+    println("----------------------------------------------------------------", Color::WHITE);
+    res = Test_4::run(address, port);
+    println("----------------------------------------------------------------", Color::WHITE);
+    if (res != 0) {
+        println("Test 4 failed!                                                 |", Color::RED);
+        pass = false;
+    } else {
+        println("Test 4 passed!                                                 |", Color::GREEN);
+    }
+    results.push_back(res == 0);
+
     // Print results
     println("================================================================", Color::WHITE);
     println("Tests results:                                                 |", Color::WHITE);
@@ -93,3 +110,5 @@ int run_tests() {
 
     return pass;
 }
+
+#endif //SYSTEMMONITORINGSERVER_TESTS_H

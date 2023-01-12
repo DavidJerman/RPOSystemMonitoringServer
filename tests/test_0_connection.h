@@ -2,9 +2,11 @@
 // Created by david on 13. 12. 2022.
 //
 
+#ifndef SYSTEMMONITORINGSERVER_TEST_0_CONNECTION_H
+#define SYSTEMMONITORINGSERVER_TEST_0_CONNECTION_H
+
 #include <QDebug>
 #include <QTcpSocket>
-#include "protocol.h"
 #include "Utils.h"
 #include "Constants.h"
 
@@ -57,3 +59,5 @@ namespace Test_0 {
         return 0;
     }
 }
+
+#endif //SYSTEMMONITORINGSERVER_TEST_0_CONNECTION_H

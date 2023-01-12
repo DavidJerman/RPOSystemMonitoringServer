@@ -1,8 +1,7 @@
-#include "server.h"
-#include "config.h"
-
 #define AUTHENTICATION_DISABLED 1
 #define IDENTIFICATION_DISABLED 1
+
+#include "server.h"
 
 /**
  * @brief Constructs the server and loads the config

@@ -6,10 +6,10 @@
 #include <QString>
 #include <QFile>
 #include <QVector>
+#include <QDir>
 
 #include <QException>
 #include <utility>
-
 
 class Config {
 public:
@@ -48,7 +48,6 @@ private:
     static QByteArray &remove(QByteArray &data, char value);
 };
 
-
 // NEEDS TO BE TESTED WITH QT CODE!
 class PropertyNotFoundException : public QException {
 public:
@@ -73,7 +72,6 @@ public:
 private:
     QString _message;
 };
-
 
 class FileException : public QException {
 public:
@@ -122,6 +120,5 @@ public:
 private:
     QString _message;
 };
-
 
 #endif // CONFIG_H
