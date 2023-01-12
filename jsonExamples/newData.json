@@ -1,0 +1,50 @@
+{
+  "cpu": {
+    "cpu_0" : {
+      "id" : 0,
+      "data" : {
+        "frequency" : 0.0,
+        "temperature" : 0.0,
+        "utilization" : 0.0
+      }
+    }
+  },
+  "disk" : {
+    "disk_0" : {
+      "id" : 0,
+      "data" : {
+        "used_space": 0.0,
+        "read_speed": 0.0,
+        "write_speed": 0.0
+      }
+    }
+  },
+  "gpu" : {
+    "gpu_0" : {
+      "id": 0,
+      "data": {
+        "frequency": 0.0,
+        "temperature": 0.0,
+        "utilization": 0.0
+      }
+    }
+  },
+  "network" : {
+    "network_0" : {
+      "id": 0,
+      "data": {
+        "download": 0.0,
+        "upload": 0.0,
+        "ping": 0
+      }
+    }
+  },
+  "ram" : {
+    "ram_0" : {
+      "id": 0,
+      "data": {
+        "utilization": 0.0
+      }
+    }
+  }
+}
