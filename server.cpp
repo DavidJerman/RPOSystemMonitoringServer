@@ -1,3 +1,5 @@
+//HELP klikneš gor in pritisneš F1
+
 #include "server.h"
 #include "config.h"
 
