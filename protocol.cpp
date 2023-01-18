@@ -335,7 +335,7 @@ int Protocol::getClientId(QByteArray &json) {
     if (document.isObject()) {
         QJsonObject object = document.object();
         if (object.contains("id")) {
-            return object["id"].toInt();
+            return object["id"].toString().toInt();
         }
     }
     return 0;
@@ -402,23 +402,17 @@ QByteArray Protocol::createMessage(MESSAGE messageType, const QByteArray &data) 
  */
 QList<MESSAGE> Protocol::getMessageTypes(const QByteArray &message) {
     QList<MESSAGE> messageTypes;
-    quint64 size;
+    qint64 size = 0;
     auto ptr = message.begin();
     do {
-        auto q0 = static_cast<quint8>(*ptr);
-        auto q1 = static_cast<quint8>(*(ptr + 1));
-        auto q2 = static_cast<quint8>(*(ptr + 2));
-        auto q3 = static_cast<quint8>(*(ptr + 3));
-        auto q4 = static_cast<quint8>(*(ptr + 4));
-        auto q5 = static_cast<quint8>(*(ptr + 5));
-        auto q6 = static_cast<quint8>(*(ptr + 6));
-        auto q7 = static_cast<quint8>(*(ptr + 7));
-        size = ((quint64) q0 << 56) + ((quint64) q1 << 48) + ((quint64) q2 << 40) +
-               ((quint64) q3 << 32) + ((quint64) q4 << 24) + ((quint64) q5 << 16) +
-               ((quint64) q6 << 8) + (quint64) q7;
-        auto messageType = (MESSAGE) QByteArray(ptr + S_INT64, 1).at(0);
+        size = ((qint64) *ptr << 56) + ((qint64) *(ptr + 1) << 48) + ((qint64) *(ptr + 2) << 40) +
+               ((qint64) *(ptr + 3) << 32) + ((qint64) *(ptr + 4) << 24) + ((qint64) *(ptr + 5) << 16) +
+               ((qint64) *(ptr + 6) << 8) + (qint64) *(ptr + 7);
+        ptr += S_INT64;
+        auto messageType = (MESSAGE) QByteArray(ptr, 1).at(0);
         messageTypes.append(messageType);
-        ptr += size;
+        ptr += size - S_INT64;
+
     } while (ptr < message.end());
     return messageTypes;
 }
@@ -430,23 +424,15 @@ QList<MESSAGE> Protocol::getMessageTypes(const QByteArray &message) {
  */
 QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
     QList<QByteArray> jsons;
-    quint64 size = 0;
+    qint64 size = 0;
     auto ptr = message.begin();
     do {
-        auto q0 = static_cast<quint8>(*ptr);
-        auto q1 = static_cast<quint8>(*(ptr + 1));
-        auto q2 = static_cast<quint8>(*(ptr + 2));
-        auto q3 = static_cast<quint8>(*(ptr + 3));
-        auto q4 = static_cast<quint8>(*(ptr + 4));
-        auto q5 = static_cast<quint8>(*(ptr + 5));
-        auto q6 = static_cast<quint8>(*(ptr + 6));
-        auto q7 = static_cast<quint8>(*(ptr + 7));
-        size = ((quint64) q0 << 56) + ((quint64) q1 << 48) + ((quint64) q2 << 40) +
-               ((quint64) q3 << 32) + ((quint64) q4 << 24) + ((quint64) q5 << 16) +
-               ((quint64) q6 << 8) + (quint64) q7;
+        size += ((qint64) (*ptr) << 56) + ((qint64) (*(ptr + 1)) << 48) + ((qint64) (*(ptr + 2)) << 40) +
+                ((qint64) (*(ptr + 3)) << 32) + ((qint64) (*(ptr + 4)) << 24) + ((qint64) (*(ptr + 5)) << 16) +
+                ((qint64) (*(ptr + 6)) << 8) + (qint64) (*(ptr + 7));
         ptr += S_INT64;
         ptr += S_CHAR;
-        auto data = message.mid((int) (ptr - message.begin()), (int) (size - S_INT64 - S_CHAR));
+        auto data = message.mid(ptr - message.begin(), size - S_INT64 - S_CHAR);
         jsons.append(data);
         ptr += size - S_INT64 - S_CHAR;
 
@@ -454,11 +440,6 @@ QList<QByteArray> Protocol::getMessageJsons(const QByteArray &message) {
     return jsons;
 }
 
-/**
- * Interprets the message confirmation.
- * @param json Confirmation JSON
- * @return Confirmation (true/false)
- */
 bool Protocol::getConfirmation(QByteArray &json) {
     QJsonDocument document = QJsonDocument::fromJson(json);
     if (document.isObject()) {

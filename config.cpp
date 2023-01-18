@@ -1,4 +1,5 @@
 #include <QDir>
+#include <QDebug>
 #include "config.h"
 
 
@@ -19,9 +20,9 @@ Config::Config()
  * @param fileName Configuration file name
  * @throws FileException
  */
-void Config::loadFromFile(const QString &fileName) {
+void Config::loadFromFile(const QString& fileName) {
     // Print working directory
-    // qDebug() << "Working directory: " << QDir::currentPath();
+    qDebug() << "Working directory: " << QDir::currentPath();
 
     QFile file(fileName);
 
@@ -37,7 +38,7 @@ void Config::loadFromFile(const QString &fileName) {
         remove(line, '\n');
         remove(line, '\r');
         // For now spaces are not supported in the config file
-        // TODO: Add support for this
+        // TODO: IGNORE, Add support for this
         remove(line, ' ');
 
         auto data = split(line, ':');
@@ -110,7 +111,7 @@ bool Config::isEmpty() noexcept {
  * @param property Property
  * @return Has property
  */
-bool Config::hasProperty(const QString &property) {
+bool Config::hasProperty(const QString& property) {
     return config.contains(property);
 }
 
@@ -120,7 +121,7 @@ bool Config::hasProperty(const QString &property) {
  * @param value Value
  * @return Has value
  */
-bool Config::hasValue(const QString &value) {
+bool Config::hasValue(const QString& value) {
     for (auto &_value: config.values()) {
         if (QString::compare(_value, value) == 0) {
             return true;
@@ -190,7 +191,7 @@ QVector<QByteArray> Config::split(QByteArray &data, char delimiter) {
  */
 QByteArray Config::join(QVector<QByteArray> &vector) {
     QByteArray data;
-    for (const auto &date: vector) {
+    for (const auto& date: vector) {
         data.append(date);
     }
     return data;

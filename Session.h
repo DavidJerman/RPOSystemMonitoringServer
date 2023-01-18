@@ -30,16 +30,16 @@ public:
 
     void setSystemAdded(bool _systemAdded);
 
-    void addSystem(System *_system);
+    void addSystem(System* _system);
 
-    [[nodiscard]] System *getSystem() const;
+    [[nodiscard]] System* getSystem() const;
 
 private:
     // Create a session with a client socket, client id and user id
     int clientID;
     int userID;
     bool systemAdded;
-    System *system;
+    System* system;
 };
 
 

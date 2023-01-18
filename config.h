@@ -8,14 +8,13 @@
 #include <QVector>
 
 #include <QException>
-#include <utility>
 
 
 class Config {
 public:
     Config();
 
-    void loadFromFile(const QString &fileName);
+    void loadFromFile(const QString& fileName);
 
     void addProperty(QString property, QString value);
 
@@ -25,9 +24,9 @@ public:
 
     bool isEmpty() noexcept;
 
-    bool hasProperty(const QString &property);
+    bool hasProperty(const QString& property);
 
-    bool hasValue(const QString &value);
+    bool hasValue(const QString& value);
 
     bool isLoaded();
 
@@ -52,8 +51,8 @@ private:
 // NEEDS TO BE TESTED WITH QT CODE!
 class PropertyNotFoundException : public QException {
 public:
-    explicit PropertyNotFoundException(QString _message = "") noexcept
-            : _message(std::move(_message)) {}
+    PropertyNotFoundException(const QString &_message = "") noexcept
+            : _message(_message) {}
 
 
     void raise() const override {
@@ -61,12 +60,12 @@ public:
     }
 
 
-    [[nodiscard]] PropertyNotFoundException *clone() const override {
+    PropertyNotFoundException *clone() const override {
         return new PropertyNotFoundException(*this);
     }
 
 
-    [[nodiscard]] QString message() const noexcept {
+    QString message() const noexcept {
         return _message;
     }
 
@@ -77,8 +76,8 @@ private:
 
 class FileException : public QException {
 public:
-    explicit FileException(QString _message = "") noexcept
-            : _message(std::move(_message)) {}
+    FileException(const QString &_message = "") noexcept
+            : _message(_message) {}
 
 
     void raise() const override {
@@ -86,36 +85,12 @@ public:
     }
 
 
-    [[nodiscard]] FileException *clone() const override {
+    FileException *clone() const override {
         return new FileException(*this);
     }
 
 
-    [[nodiscard]] QString message() const noexcept {
-        return _message;
-    }
-
-private:
-    QString _message;
-};
-
-class DatabaseException : public QException {
-public:
-    explicit DatabaseException(QString _message = "") noexcept
-            : _message(std::move(_message)) {}
-
-
-    void raise() const override {
-        throw *this;
-    }
-
-
-    [[nodiscard]] DatabaseException *clone() const override {
-        return new DatabaseException(*this);
-    }
-
-
-    [[nodiscard]] QString message() const noexcept {
+    QString message() const noexcept {
         return _message;
     }
 
