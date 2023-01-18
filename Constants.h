@@ -9,4 +9,10 @@
 #define S_CHAR 1
 #define WAIT_FOR_READY_READ 120000
 
+// Tests
+#define TEST_USERNAME "Test"
+#define TEST_PASSWORD "test123"
+#define TEST_ID 5
+#define TEST_CLIENT_ID 5
+
 #endif //SYSTEMMONITORINGSERVER_CONSTANTS_H

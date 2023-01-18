@@ -10,42 +10,57 @@
 #include <QMap>
 
 #include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
 
 #include "config.h"
 #include "Session.h"
 #include "protocol.h"
+#include "components/system.h"
 
-class Server : public QObject
-{
-    Q_OBJECT
+class Server : public QObject {
+Q_OBJECT
 public:
     Server();
+
     //funkcija gre čez vse Session in poišče client ki ima ta session, vrne session.
-    bool containsSocket(QTcpSocket* socket);
-    Session* getSession(QTcpSocket* clientSocket) const;
+    bool containsSocket(QTcpSocket *socket);
+
+    Session *getSession(QTcpSocket *clientSocket) const;
+
     //Session clientHasSession();
     ~Server() override;
 
 public slots:
+
     // Slots that we connect to signals
     void onNewConnection();
+
     void onReadReady();
+
     void onDisconnected();
 
 
 private:
-    int authenticate(const QByteArray& username, const QByteArray& password);
-    int identify(int userID, int clientID);
-    bool addSystem(int userID, int clientID, System* system);
+    int authenticate(const QByteArray &username, const QByteArray &password);
 
-    void parseMessage(QTcpSocket* client, const QByteArray& msg);
+    int identify(int userID, int clientID);
+
+    bool addSystem(int userID, int clientID, System *system);
+
+    void parseMessage(QTcpSocket *client, const QByteArray &msg);
 
     Config config;
     QSqlDatabase db;
 
-    QTcpServer* server;
-
+    QTcpServer *server;
+    
+//DODANI KOMENTARJI
+// <<<<<<< AljazBrest
     QList<QTcpSocket*> clients;
+// =======
+    QMap<QTcpSocket *, Session *> clients;
+// >>>>>>> main
 };
 
 #endif // SERVER_H

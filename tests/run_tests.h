@@ -6,6 +6,7 @@
 #include "tests/test_0_connection.h"
 #include "tests/test_1_authentication.h"
 #include "tests/test_2_identification.h"
+#include "tests/test_3_new_system.h"
 
 using namespace Utils;
 
@@ -16,7 +17,6 @@ int run_tests() {
 
     std::vector<bool> results;
 
-    sleep(1);
     println("================================================================", Color::WHITE);
     println("Running tests...                                               |", Color::WHITE);\
 
@@ -62,20 +62,34 @@ int run_tests() {
     }
     results.push_back(res == 0);
 
+    // Test 3
+    println("================================================================", Color::WHITE);
+    println("Running tests 3 - New system                                   |", Color::WHITE);
+    println("----------------------------------------------------------------", Color::WHITE);
+    res = Test_3::run(address, port);
+    println("----------------------------------------------------------------", Color::WHITE);
+    if (res != 0) {
+        println("Test 3 failed!                                                 |", Color::RED);
+        pass = false;
+    } else {
+        println("Test 3 passed!                                                 |", Color::GREEN);
+    }
+    results.push_back(res == 0);
+
     // Print results
     println("================================================================", Color::WHITE);
     println("Tests results:                                                 |", Color::WHITE);
     println("----------------------------------------------------------------", Color::WHITE);
     for (int i = 0; i < results.size(); i++) {
         if (results[i]) {
-            println("Test " + QString::number(i) + " passed!                                                 |", Color::GREEN);
+            println("Test " + QString::number(i) + " passed!                                                 |",
+                    Color::GREEN);
         } else {
-            println("Test " + QString::number(i) + " failed!                                                 |", Color::RED);
+            println("Test " + QString::number(i) + " failed!                                                 |",
+                    Color::RED);
         }
     }
     println("================================================================", Color::WHITE);
-
-    sleep(1);
 
     return pass;
 }
